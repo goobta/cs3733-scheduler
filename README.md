@@ -1,2 +1,2 @@
-# cs3733-scheduler
-The group project for cs3733 (Software Engineering)
+# Scheduler - Lesath
+The group project for CS3733(Software Engineering)
