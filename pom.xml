@@ -13,7 +13,7 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 
 		<cobertura.version>2.7</cobertura.version>
-		<jacoco.version>0.8.2</jacoco.version>
+		<junit.version>3.8.1</junit.version>
 	</properties>
 
 	<dependencies>
