@@ -42,6 +42,12 @@ we have a view for the Organizer to view all schedules
 * Close day
 * Open day
 
+
+### /organizer/schedule/{scheduleId}/meeting/{meetingId}
+#### delete
+* Cancel Meeting
+
+
 ### /participant/schedule/{scheduleId}/meeting
 #### put
 *  Create Meeting
@@ -70,7 +76,3 @@ we have a view for the Organizer to view all schedules
 #### get
 * Review Weekly Schedule
 * Review Schedule
-
-
-### /schedule/{scheduleId}/meeting/{meetingId}
-* Cancel Meeting
