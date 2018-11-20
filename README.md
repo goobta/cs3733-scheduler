@@ -26,19 +26,19 @@ we have a view for the Organizer to view all schedules
 
 
 ### /organizer/schedule/{scheduleId}/timeslot
-#### put
+#### post
 * Close Individual Timeslot
 * Open Individual Timeslot
 
 
 ### /organizer/schedule/{scheduleId}/range
-#### put
+#### post
 * Close Time Range
 * Open Time Range
 
 
 ### /organizer/schedule/{scheduleId}/day
-#### put
+#### post
 * Close day
 * Open day
 
