@@ -24,3 +24,5 @@ hs_err_pid*
 
 # Maven things
 target/
+
+.DS_Store
