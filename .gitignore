@@ -27,3 +27,4 @@ target/
 
 *.DS_Store
 /.metadata/
+html/node_modules/
