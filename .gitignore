@@ -26,5 +26,6 @@ hs_err_pid*
 target/
 
 *.DS_Store
-/.metadata/
 html/node_modules/
+
+.metadata/
