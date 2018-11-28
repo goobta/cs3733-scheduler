@@ -24,8 +24,14 @@ hs_err_pid*
 
 # Maven things
 target/
+dependency-reduced-pom.xml
 
 *.DS_Store
 html/node_modules/
 
 .metadata/
+
+# Eclipse Shit
+.classpath
+.project
+.settings/
