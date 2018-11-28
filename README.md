@@ -1,4 +1,4 @@
-# Scheduler - Lesath
+# Scheduler [Lesath Team]
 
 This is our term project for cs3733 (Software Engineering)
 
