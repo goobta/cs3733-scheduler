@@ -23,7 +23,7 @@
       <div class='field-body'>
         <div class='field'>
           <p class='controll'>
-            <datepicker class='field' v-model="schedule.startDate"></datepicker>
+            <datepicker class='field' v-model="schedule.startDateTime"></datepicker>
           </p>
         </div>
       </div>
@@ -36,7 +36,7 @@
       <div class='field-body'>
         <div class='field'>
           <p class='controll'>
-            <datepicker class='field' v-model="schedule.endDate"></datepicker>
+            <datepicker class='field' v-model="schedule.endDateTime"></datepicker>
           </p>
         </div>
       </div>
@@ -124,16 +124,17 @@ export default {
       delete this.schedule.startTime;
       delete this.schedule.endTime;
 
-      this.schedule.startTime = tempStart
+      this.schedule.startTime = tempStart;
       this.schedule.endTime = tempEnd;
-
-      let res = await fetch('/organizer/schedule', {
+      let res = await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/organizerSchedule', {
         method: 'PUT',
         body: JSON.stringify(this.schedule),
         headers:{
           'Content-Type': 'application/json'
         }
       })
+      console.log(res);
+      console.log('Done');
     }
   }
 }
