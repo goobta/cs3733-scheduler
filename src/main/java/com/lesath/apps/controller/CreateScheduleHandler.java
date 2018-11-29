@@ -90,29 +90,5 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     	OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
         writer.write(responseJson.toJSONString());  
         writer.close();		
-		
-    	/**
-    	CreateScheduleResponse res;
-    	ScheduleConfig sc;
-    	
-    	try {
-    		sc = parseInput(ScheduleConfig.class);
-    	} catch (ParseException e) {
-    		res = new CreateScheduleResponse(400);
-    		
-    		respond(res);
-    		return;
-    	}
-	    	
-    	String uuid = new CreateScheduleRequest(sc).execute();
-    	
-    	if(!uuid.isEmpty()) {
-	    	res = new CreateScheduleResponse(204, uuid);
-    	} else {
-	    	res = new CreateScheduleResponse(500);
-    	}
-	    
-	    respond(res);
-	    /*/
     }
 }
