@@ -22,20 +22,17 @@ public class CreateScheduleRequest {
 				null);
 	}
 	
-	public boolean execute() {
+	public String execute() {
 		try {
     		ScheduleDAO s = new ScheduleDAO();
     		
-    		s.addSchedule(schedule);
-    		System.out.println("added");
-    		
-    		return true;
-    	}
+    		return s.addSchedule(schedule);
+       	}
     	catch(Exception e){
     		e.printStackTrace();
     		System.out.println("fails to put");
     		
-    		return false;
+    		return "";
     	}
 	}
 }

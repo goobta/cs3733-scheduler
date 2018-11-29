@@ -37,8 +37,10 @@ public class CreateScheduleHandler extends Handler<ScheduleConfig, CreateSchedul
     		return;
     	}
 	    	
-    	if(new CreateScheduleRequest(sc).execute()) {
-	    	res = new CreateScheduleResponse(204);
+    	String uuid = new CreateScheduleRequest(sc).execute();
+    	
+    	if(!uuid.isEmpty()) {
+	    	res = new CreateScheduleResponse(204, uuid);
     	} else {
 	    	res = new CreateScheduleResponse(500);
     	}
