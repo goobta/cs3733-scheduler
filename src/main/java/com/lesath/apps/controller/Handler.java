@@ -52,7 +52,7 @@ public abstract class Handler<Request, Response> implements RequestStreamHandler
 		
 		JSONObject header = new JSONObject();
     	header.put("Content-Type",  "application/json");  // not sure if needed anymore?
-		header.put("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+		header.put("Access-Control-Allow-Methods", "GET,POST,PUT,OPTIONS");
 	    header.put("Access-Control-Allow-Origin",  "*");
 	    
 	    responseJson = new JSONObject();
