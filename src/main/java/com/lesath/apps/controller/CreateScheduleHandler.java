@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,12 +15,24 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lesath.apps.controller.model.ScheduleConfig;
+import com.lesath.apps.util.LocalDateTimeJsonConvertor;
 
 public class CreateScheduleHandler implements RequestStreamHandler {
 
 	private static final JSONObject JSONObject = null;
 	public LambdaLogger logger = null;
+
+	private static Gson gson;
+	
+	static {
+		gson = new GsonBuilder()
+				.setPrettyPrinting()
+				.serializeNulls()
+				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeJsonConvertor())
+				.create();
+	}
 	
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
@@ -66,9 +79,10 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	    
 	    if (!processed) {
 	    	System.out.println("BODY: " + body);
-	    	ScheduleConfig sc = new Gson().fromJson(body, ScheduleConfig.class);
+	    	ScheduleConfig sc = gson.fromJson(body, ScheduleConfig.class);
 	    	
 	    	System.out.println("NAME: " + sc.getName());
+	    	System.out.print("TIME: " + sc.getStartDayTime());
 	    }
     }
 }

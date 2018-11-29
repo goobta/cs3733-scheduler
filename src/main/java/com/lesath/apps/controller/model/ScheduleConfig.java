@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 public class ScheduleConfig {
 	String name;
 	int meetingLength;
-	String startDayTime;
-	String endDayTime;
+	LocalDateTime startDayTime;
+	LocalDateTime endDayTime;
 	
-	public ScheduleConfig(String name, int meetingLength, String startDayTime, String endDayTime) {
+	public ScheduleConfig(String name, int meetingLength, LocalDateTime startDayTime, LocalDateTime endDayTime) {
 		this.name = name;
 		this.meetingLength = meetingLength;
 		this.startDayTime = startDayTime;
@@ -46,28 +46,28 @@ public class ScheduleConfig {
 	/**
 	 * @return the startDayTime
 	 */
-	public String getStartDayTime() {
+	public LocalDateTime getStartDayTime() {
 		return startDayTime;
 	}
 
 	/**
 	 * @param startDayTime the startDayTime to set
 	 */
-	public void setStartDayTime(String startDayTime) {
+	public void setStartDayTime(LocalDateTime startDayTime) {
 		this.startDayTime = startDayTime;
 	}
 
 	/**
 	 * @return the endDayTime
 	 */
-	public String getEndDayTime() {
+	public LocalDateTime getEndDayTime() {
 		return endDayTime;
 	}
 
 	/**
 	 * @param endDayTime the endDayTime to set
 	 */
-	public void setEndDayTime(String endDayTime) {
+	public void setEndDayTime(LocalDateTime endDayTime) {
 		this.endDayTime = endDayTime;
 	}
 }

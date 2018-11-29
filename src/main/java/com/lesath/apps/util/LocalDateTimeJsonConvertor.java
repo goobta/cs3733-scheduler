@@ -14,7 +14,7 @@ import com.google.gson.JsonSerializer;
 
 public class LocalDateTimeJsonConvertor implements JsonSerializer<LocalDateTime>,JsonDeserializer<LocalDateTime> {
     
-	private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+	private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 	
 	public JsonElement serialize(LocalDateTime localDateTime, Type type, JsonSerializationContext jsonSerializationContext) {
         return new JsonPrimitive(localDateTime.format(dateTimeFormatter));
@@ -22,7 +22,6 @@ public class LocalDateTimeJsonConvertor implements JsonSerializer<LocalDateTime>
  
 	public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
-		return LocalDateTime.parse(json.getAsString(),dateTimeFormatter);
-		
+		return LocalDateTime.parse(json.getAsString(), dateTimeFormatter);
 	}
 }
