@@ -20,73 +20,29 @@ import com.google.gson.GsonBuilder;
 import com.lesath.apps.controller.model.ScheduleConfig;
 import com.lesath.apps.util.LocalDateTimeJsonConvertor;
 
-public class CreateScheduleHandler implements RequestStreamHandler {
-
-	private static final JSONObject JSONObject = null;
-	public LambdaLogger logger = null;
-
-	private static Gson gson;
-	
-	static {
-		gson = new GsonBuilder()
-				.setPrettyPrinting()
-				.serializeNulls()
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeJsonConvertor())
-				.create();
-	}
-	
+public class CreateScheduleHandler extends Handler<ScheduleConfig, CreateScheduleResponse> {
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-    	logger = context.getLogger();
+    	init(input, output, context, "Create Schedule Controller");
     	
-    	if (logger != null) logger.log("In CreateSchedule handleRequest");
+    	CreateScheduleResponse res;
+    	ScheduleConfig sc;
     	
-    	JSONObject header = new JSONObject();
-    	header.put("Content-Type",  "application/json");  // not sure if needed anymore?
-		header.put("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-	    header.put("Access-Control-Allow-Origin",  "*");
-	    
-	    JSONObject responseJson = new JSONObject();
-	    responseJson.put("headers", header);
-	    
-	    String body = null;
-	    boolean processed = false;
-	    CreateScheduleResponse res = null;
-	    
-	    try {
-	    	BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-	    	JSONParser parser = new JSONParser();
-	    	JSONObject event = (JSONObject) parser.parse(reader);
+    	try {
+    		sc = parseInput(ScheduleConfig.class);
+    	} catch (ParseException e) {
+    		res = new CreateScheduleResponse(400);
+    		
+    		respond(res);
+    		return;
+    	}
 	    	
-	    	logger.log("event: " + event.toJSONString());
-	    	
-	    	String method = (String) event.get("httpMethod");
-	    	
-	    	System.out.println("METHOD: " + method);
-	    	if (event.get("body") != null) {
-    			body = event.get("body").toString();
-    		}
-	    } catch(ParseException e) {
-	    	logger.log(e.toString());
-	    	processed = true;
-	    	body = null;
-	    	res = new CreateScheduleResponse(400);
-	    }
+    	if(new CreateScheduleRequest(sc).execute()) {
+	    	res = new CreateScheduleResponse(204);
+    	} else {
+	    	res = new CreateScheduleResponse(500);
+    	}
 	    
-	    if (!processed) {
-	    	ScheduleConfig sc = gson.fromJson(body, ScheduleConfig.class);
-	    	
-	    	if(new CreateScheduleRequest(sc).execute()) {
-		    	res = new CreateScheduleResponse(204);
-	    	} else {
-		    	res = new CreateScheduleResponse(500);
-	    	}
-	    }
-	    
-	    responseJson.put("body", gson.toJson(res));
-	    
-	    OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
-        writer.write(responseJson.toJSONString());  
-        writer.close();
+	    respond(res);
     }
 }
