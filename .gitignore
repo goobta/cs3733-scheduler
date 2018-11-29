@@ -27,7 +27,7 @@ target/
 dependency-reduced-pom.xml
 
 *.DS_Store
-html/node_modules/
+src/main/html/node_modules/
 
 .metadata/
 
