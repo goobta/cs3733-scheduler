@@ -30,7 +30,7 @@ public class ScheduleDAO {
      * @return returns true when method is able to add the tuple. 
      * @throws Exception given when fails to add the row in the table.
      */
-    public boolean addSchedule(Schedule s) throws Exception {
+    public String addSchedule(Schedule s) throws Exception {
     	String uuid = UUID.randomUUID().toString();
         try {
             PreparedStatement ps;
@@ -56,7 +56,7 @@ public class ScheduleDAO {
             	ps.setString(9, null);
             }
             ps.execute();
-            return true;
+            return uuid;
 
         } catch (Exception e) {
             throw new Exception("Failed to insert constant: " + e.getMessage());
