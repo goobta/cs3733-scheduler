@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 
 import org.json.simple.JSONObject;
@@ -50,6 +51,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	    
 	    String body = null;
 	    boolean processed = false;
+	    CreateScheduleResponse res = null;
 	    
 	    try {
 	    	BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -68,16 +70,23 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	    	logger.log(e.toString());
 	    	processed = true;
 	    	body = null;
+	    	res = new CreateScheduleResponse(400);
 	    }
 	    
 	    if (!processed) {
 	    	ScheduleConfig sc = gson.fromJson(body, ScheduleConfig.class);
 	    	
 	    	if(new CreateScheduleRequest(sc).execute()) {
-	    		
+		    	res = new CreateScheduleResponse(204);
 	    	} else {
-	    		
+		    	res = new CreateScheduleResponse(500);
 	    	}
 	    }
+	    
+	    responseJson.put("body", gson.toJson(res));
+	    
+	    OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
+        writer.write(responseJson.toJSONString());  
+        writer.close();
     }
 }
