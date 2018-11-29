@@ -127,7 +127,7 @@ export default {
       this.schedule.startTime = tempStart
       this.schedule.endTime = tempEnd;
 
-      let res = await fetch(api + '/organizer/schedule', {
+      let res = await fetch('/organizer/schedule', {
         method: 'PUT',
         body: JSON.stringify(this.schedule),
         headers:{

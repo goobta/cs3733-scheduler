@@ -24,18 +24,6 @@
 				<tr>
 					<td>
 					</td>
-
-					<td>
-					</td>
-
-					<td>
-					</td>
-
-					<td>
-					</td>
-
-					<td>
-					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -46,11 +34,16 @@
 export default {
 	data: function() {
 		return {
-
+			schedule: []
 		}
 	},
 	methods: {
-		
+		generateSchedule () {
+			
+		}
+	},
+	created () {
+
 	}
 }
 </script>
