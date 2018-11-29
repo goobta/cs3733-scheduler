@@ -35,3 +35,4 @@ src/main/html/node_modules/
 .classpath
 .project
 .settings/
+.bin/
