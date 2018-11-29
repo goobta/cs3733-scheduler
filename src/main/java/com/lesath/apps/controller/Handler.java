@@ -84,6 +84,8 @@ public abstract class Handler<Request, Response> implements RequestStreamHandler
 	}
 	
 	protected void respond(Response r) throws IOException {
+		responseJson.put("body", gson.toJson(r));
+		
 		OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
         writer.write(responseJson.toJSONString());  
         writer.close();
