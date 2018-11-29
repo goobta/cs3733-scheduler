@@ -36,3 +36,7 @@ html/node_modules/
 .project
 .settings/
 .bin/
+
+# NodeJS Stuff
+**/package-lock.json
+**/yarn.lock
