@@ -51,7 +51,7 @@ public abstract class Handler<Request, Response> implements RequestStreamHandler
 		if (logger != null) logger.log("In handle request for " + controllerName);
 		
 		JSONObject header = new JSONObject();
-    	header.put("Content-Type",  "application/json");  // not sure if needed anymore?
+		header.put("Content-Type",  "application/json");  // not sure if needed anymore?
 		header.put("Access-Control-Allow-Methods", "GET,POST,PUT,OPTIONS");
 	    header.put("Access-Control-Allow-Origin",  "*");
 	    
@@ -72,6 +72,12 @@ public abstract class Handler<Request, Response> implements RequestStreamHandler
 	    	String method = (String) event.get("httpMethod");
 	    	
 	    	System.out.println("METHOD: " + method);
+	    	
+	    	if (method != null && method.equalsIgnoreCase("OPTIONS")) {
+	    		logger.log("Options request");
+	    		
+	    		this.respond(null);
+	    	}
 	    	
 			body = event.get("body").toString();
 	    } catch(ParseException e) {
