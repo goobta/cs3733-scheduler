@@ -18,17 +18,10 @@ public class Main {
 
 	public static void main(String args[]) {
 		
-		/*Connection conn ;
-    	try  {
-    		conn = DatabaseUtil.connect();
-    		System.out.println("done");
-    	} catch (Exception e) {
-    		conn = null;
-    		System.out.println("none");
-    	}*/
+
     	
     	Schedule sche = new Schedule(null, "work", 15, LocalDate.now(), LocalDate.now(), LocalTime.now(), LocalTime.now(), LocalDateTime.now(), null );
-    	
+    	/*
     	try {
     		ScheduleDAO s = new ScheduleDAO();
     		s.addSchedule(sche);
@@ -37,21 +30,20 @@ public class Main {
     	catch(Exception e){
     		e.printStackTrace();
     		System.out.println("fails to put");
-    	}
+    	}*/
     	
-    	/*try {
+    	try {
     		ScheduleDAO s = new ScheduleDAO();
-    		ArrayList<TestTable> lis = new ArrayList<TestTable>();
+    		ArrayList<Schedule> lis = new ArrayList<Schedule>();
     		lis = s.getSchedule();
-    		for (int i = 0; i < lis.size(); i++) {
-    			System.out.print("x" + i + " : " + lis.get(i).getX() + " ");
-    			System.out.println("y" + i + " : " + lis.get(i).getY());
+    		for (Schedule schee: lis) {
+    			System.out.println(schee);
     		}
     		
     	}
     	catch(Exception e){
     		System.out.println("fails to get");
-    	}*/
+    	}
     	
 	}
 }

@@ -1,6 +1,10 @@
 package com.lesath.apps.db;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -59,18 +63,23 @@ public class ScheduleDAO {
         }
     }
     
-   /* public ArrayList<TestTable> getSchedule() throws Exception {
+   /**
+    * 
+    * @return an ArrayList<Schedule> containing all the rows in the table schedules
+    * @throws Exception when it fails to retrieve a row.
+    */
+   public ArrayList<Schedule> getSchedule() throws Exception {
         
-    	ArrayList<TestTable> rowList = new ArrayList<TestTable>();
+    	ArrayList<Schedule> rowList = new ArrayList<Schedule>();
     	
     	try {
     		Statement statement = conn.createStatement();
-            String query = "SELECT * FROM testTable";
+            String query = "SELECT * FROM Schedules";
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                TestTable row = generateConstant(resultSet);
-                rowList.add(row);
+                Schedule sche = generateSchedule(resultSet);
+                rowList.add(sche);
             }
             resultSet.close();
             statement.close();
@@ -78,13 +87,33 @@ public class ScheduleDAO {
 
         } catch (Exception e) {
         	rowList = null;
-            throw new Exception("Failed to insert constant: " + e.getMessage());
+            throw new Exception("Failed to get schedule: " + e.getMessage());
         }
     }
     
-    private TestTable generateConstant(ResultSet resultSet) throws Exception {
-        int x  = resultSet.getInt("x");
-        int y = resultSet.getInt("y");
-        return new TestTable(x,y);
-    }*/
+   /**
+    * 
+    * @param resultSet a row of the table schedules
+    * @return A Schedule Object made from the resultSet
+    * @throws Exception when cannot make the object.
+    */
+    private Schedule generateSchedule(ResultSet resultSet) throws Exception {
+    	
+    	LocalDateTime deleted_at;
+        String uuid = resultSet.getString("uuid");
+        String name = resultSet.getString("name");
+        int duration = resultSet.getInt("duration");
+        LocalDate start_date = LocalDate.parse(resultSet.getString("start_date"));
+        LocalDate end_date = LocalDate.parse(resultSet.getString("end_date"));
+        LocalTime daily_start_time = LocalTime.parse(resultSet.getString("daily_start_time") );
+        LocalTime daily_end_time = LocalTime.parse((resultSet.getString("daily_end_time")));
+        LocalDateTime created_at = LocalDateTime.parse(resultSet.getString("created_at"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        if(resultSet.getString("deleted_at") != null) {
+        	deleted_at = LocalDateTime.parse(resultSet.getString("deleted_at"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        }
+        else {
+        	deleted_at = null;
+        }
+        return new Schedule(uuid, name, duration, start_date, end_date, daily_start_time, daily_end_time, created_at, deleted_at) ;
+    }
 }
