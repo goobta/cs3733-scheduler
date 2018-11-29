@@ -15,7 +15,7 @@ public class Schedule {
 	LocalDateTime created_at;
 	LocalDateTime deleted_at;
 	/**
-	 * @param uuid
+	 * @param uuid SHOLD BE NULL
 	 * @param name
 	 * @param duration
 	 * @param start_date
