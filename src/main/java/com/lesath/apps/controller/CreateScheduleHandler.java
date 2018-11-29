@@ -64,13 +64,6 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	    	if (event.get("body") != null) {
     			body = event.get("body").toString();
     		}
-	    	
-	    	/**
-	    	if (method != null && method.equalsIgnoreCase("OPTIONS")) {
-	    		logger.log("Options Request");
-	    		processed = true;	
-	    	}
-	    	*/
 	    } catch(ParseException e) {
 	    	logger.log(e.toString());
 	    	processed = true;
@@ -78,11 +71,13 @@ public class CreateScheduleHandler implements RequestStreamHandler {
 	    }
 	    
 	    if (!processed) {
-	    	System.out.println("BODY: " + body);
 	    	ScheduleConfig sc = gson.fromJson(body, ScheduleConfig.class);
 	    	
-	    	System.out.println("NAME: " + sc.getName());
-	    	System.out.print("TIME: " + sc.getStartDayTime());
+	    	if(new CreateScheduleRequest(sc).execute()) {
+	    		
+	    	} else {
+	    		
+	    	}
 	    }
     }
 }
