@@ -2,11 +2,16 @@ package com.lesath.apps.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
 
 public class Schedule {
+	@SerializedName("id")
 	String uuid;
 	String name;
+	@SerializedName("meetingDuration")
 	int duration;
 	LocalDate start_date;
 	LocalDate end_date;
@@ -14,6 +19,10 @@ public class Schedule {
 	LocalTime daily_end_time;
 	LocalDateTime created_at;
 	LocalDateTime deleted_at;
+	
+	String organizerId = "01e113d8-3cc3-4fc1-90a2-81f65cfcda16";
+	LocalDateTime startDateTime;
+	LocalDateTime endDateTime;
 	/**
 	 * @param uuid SHOLD BE NULL
 	 * @param name
@@ -37,6 +46,10 @@ public class Schedule {
 		this.daily_end_time = daily_end_time;
 		this.created_at = created_at;
 		this.deleted_at = deleted_at;
+		
+		this.startDateTime = LocalDateTime.of(start_date, daily_start_time);
+		this.endDateTime = LocalDateTime.of(end_date, daily_end_time);
+		
 	}
 	/**
 	 * @return the uuid
