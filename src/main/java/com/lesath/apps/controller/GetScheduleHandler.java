@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
@@ -15,8 +16,10 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lesath.apps.db.ScheduleDAO;
 import com.lesath.apps.model.Schedule;
+import com.lesath.apps.util.LocalDateTimeJsonConvertor;
 
 public class GetScheduleHandler implements RequestStreamHandler {
 
@@ -24,6 +27,13 @@ public class GetScheduleHandler implements RequestStreamHandler {
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
     	LambdaLogger logger = context.getLogger();
 		ScheduleDAO dao = new ScheduleDAO();
+		
+		Gson gson = new GsonBuilder()
+				.setPrettyPrinting()
+				.serializeNulls()
+				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeJsonConvertor())
+				.create();
+		
 		ArrayList<Schedule> schedules;
 		JSONObject response = new JSONObject();
 		String body;
@@ -41,21 +51,22 @@ public class GetScheduleHandler implements RequestStreamHandler {
 			schedules = dao.getSchedule();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			JSONObject event = (JSONObject) parser.parse(reader);
-			body = event.get("headers").toString();
+			body = event.get("queryStringParameters").toString();
+			String uuid = ((JSONObject) event.get("queryStringParameters")).get("uuid").toString();
 			logger.log("event:" + event.toJSONString());
-			GetScheduleRequest req = new Gson().fromJson(body, GetScheduleRequest.class);
+			//GetScheduleRequest req = gson.fromJson(body, GetScheduleRequest.class);
 			
 			for(Schedule x : schedules) {
-				if(x.getUuid().equals(req.uuid)) {
+				if(x.getUuid().equals(uuid)) {
 					theseSchedules = x;
 				}
 			}
 			
 			if(theseSchedules != null) {	// Schedule was found
-				response.put("body", new Gson().toJson(theseSchedules));
+				response.put("body", gson.toJson(theseSchedules));
 			}
 			else {	// Schedule was not found
-				// something should happen here
+				response.put("body", "error");
 			}
 		}
 		catch(Exception e) {
