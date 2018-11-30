@@ -28,7 +28,6 @@
 						{{ time.time }}
 					</td>
 					<td v-for='timeSlot in time.days' v-bind:class="{ unavailable: !timeSlot.open }">
-						<button v-if='timeSlot.open' class='button'>Free</button>
 					</td>
 				</tr>
 			</tbody>

@@ -1,0 +1,32 @@
+These are the pre-signed urls, some of the members of our team could not access them. We are submitting these as they are
+what eclipse gives us.
+
+Organizer landing page: https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20181130T030020Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604796&X-Amz-Credential=AKIAIKKEDML7KJBAQLYQ%2F20181130%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=4633ad98eb02f3794685e1429f6e19f50a82856d061f0c70ed738d903816ed37#/createSchedule
+
+Participant landing page: https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20181130T030020Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604796&X-Amz-Credential=AKIAIKKEDML7KJBAQLYQ%2F20181130%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=4633ad98eb02f3794685e1429f6e19f50a82856d061f0c70ed738d903816ed37#/searchSchedule
+
+System Admin landing page: https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20181130T030020Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604796&X-Amz-Credential=AKIAIKKEDML7KJBAQLYQ%2F20181130%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=4633ad98eb02f3794685e1429f6e19f50a82856d061f0c70ed738d903816ed37#/sysAdminSearch
+
+
+These are the links that consistently work. They are just some modifications off of the presigned URLs.
+
+Organizer landing page: https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html#/createSchedule
+
+Participant landing page: https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html#/searchSchedule
+
+System Admin landing page: https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html#/sysAdminSearch
+
+When an organizer creates a schedule, it generates a public url for them to distribute to their participants. We did not know if that link would count as the landing page or not for the participant, so we created a page for the participant where they could put in the secret code to get the schedule.
+
+
+Additionally, if there is an issue with accessing the webpages, the following are the MD5 hashes for our S3 files.
+If there is any issue, we have also saved a snapshot of our program (which can be verified by the hashes) so that you
+can properly gauage our project by the submission timeline.
+
+fe184e25188276824a70610763e0e649  app.9724565e.css
+7a69f0dcd4a722938b182d0acb0e37cc  app.f30a9ba7.js
+3fafd1b135561240a29cdef31442131a  app.f30a9ba7.js.map
+991b5ccdfa47dc5339ccb1ee20ce2d7b  chunk-vendors.3349a11b.js
+c684b73d29e94e7b08bc539cf92e9bfb  chunk-vendors.3349a11b.js.map
+7ea4ebc41f2865ece9dd7a68f7e9dea3  chunk-vendors.93561a47.css
+2e070cc39b774a9bbe8a38086ff26d83  index.html
