@@ -1,24 +1,24 @@
 package com.lesath.apps.controller;
 
 public class CreateScheduleResponse {
-	int httpCode;
+	int statusCode;
 	String scheduleUuid;
 	
 	public CreateScheduleResponse(int code, String scheduleUUID) {
-		httpCode = code;
+		statusCode = code;
 		scheduleUuid = scheduleUUID;
 	}
 	
 	public CreateScheduleResponse(int code) {
-		httpCode = code;
+		statusCode = code;
 		scheduleUuid = null;
 	}
 	
-	public int getHTTPCode() {
-		return this.httpCode;
+	public int getStatusCode() {
+		return this.statusCode;
 	}
-	public void setHttpCode(int code) {
-		this.httpCode = code;
+	public void setStatusCode(int code) {
+		this.statusCode = code;
 	}
 	public String getUuid() {
 		return this.scheduleUuid;
