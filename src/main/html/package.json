@@ -5,6 +5,9 @@
     },
     "dependencies": {
         "@vue/cli-service": "^3.1.4",
+        "amazon-cognito-identity-js": "^3.0.3",
+        "aws-amplify": "^1.1.10",
+        "aws-sdk": "^2.365.0",
         "bulma": "^0.7.2",
         "node-sass": "^4.10.0",
         "sass-loader": "^7.1.0",
