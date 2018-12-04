@@ -8,7 +8,6 @@ public class Meeting {
 	LocalDateTime start_time;
 	LocalDateTime created_at;
 	LocalDateTime deleted_at;
-	String secret_code;
 	String participant_name;
 	
 	/**
@@ -17,18 +16,16 @@ public class Meeting {
 	 * @param start_time
 	 * @param created_at
 	 * @param deleted_at
-	 * @param secret_code
 	 * @param participant_name
 	 */
 	public Meeting(String schedule_id, String uuid, LocalDateTime start_time, LocalDateTime created_at,
-			LocalDateTime deleted_at, String secret_code, String participant_name) {
+			LocalDateTime deleted_at, String participant_name) {
 		super();
 		this.schedule_id = schedule_id;
 		this.uuid = uuid;
 		this.start_time = start_time;
 		this.created_at = created_at;
 		this.deleted_at = deleted_at;
-		this.secret_code = secret_code;
 		this.participant_name = participant_name;
 	}
 	
@@ -91,18 +88,6 @@ public class Meeting {
 	 */
 	public void setDeleted_at(LocalDateTime deleted_at) {
 		this.deleted_at = deleted_at;
-	}
-	/**
-	 * @return the secret_code
-	 */
-	public String getSecret_code() {
-		return secret_code;
-	}
-	/**
-	 * @param secret_code the secret_code to set
-	 */
-	public void setSecret_code(String secret_code) {
-		this.secret_code = secret_code;
 	}
 	/**
 	 * @return the participant_name

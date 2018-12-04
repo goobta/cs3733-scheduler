@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+import com.lesath.apps.model.Meeting;
 import com.lesath.apps.model.Schedule;
 import com.lesath.apps.model.TestTable;
 
@@ -33,15 +34,21 @@ public class Main {
     	}*/
     	
     	try {
-    		ScheduleDAO s = new ScheduleDAO();
-    		ArrayList<Schedule> lis = new ArrayList<Schedule>();
-    		lis = s.getSchedule();
-    		for (Schedule schee: lis) {
-    			System.out.println(schee);
-    		}
+    		//ScheduleDAO s = new ScheduleDAO();
+    		//ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+    		//schedules = s.getSchedule();
+    		
+    		MeetingDAO mdao = new MeetingDAO();
+    		//Meeting m = mdao.getMeeting("91194d6f-dafb-47f2-809c-38029d0a5df3");
+    		//System.out.println(m.getParticipant_name() + "'s meeting");
+    		System.out.println(mdao.getAllMeetings().get(0).getParticipant_name());
+    		//for (Schedule schee: schedules) {
+    			//System.out.println(schee);
+    		//}
     		
     	}
     	catch(Exception e){
+    		//e.printStackTrace();
     		System.out.println("fails to get");
     	}
     	
