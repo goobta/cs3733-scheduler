@@ -17,12 +17,12 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import com.lesath.apps.util.LocalDateTimeJsonConvertor;
 
 public abstract class Handler<Request, Response> implements RequestStreamHandler {
 
 	public LambdaLogger logger = null;
-	protected static Gson gson;	
 	
 	JSONObject responseJson;
 	
@@ -32,6 +32,8 @@ public abstract class Handler<Request, Response> implements RequestStreamHandler
 	
 	private String controllerName;
 	
+	public static Gson gson;	
+
 	static {
 		gson = new GsonBuilder()
 				.setPrettyPrinting()
