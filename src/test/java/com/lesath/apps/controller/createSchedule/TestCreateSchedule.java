@@ -33,8 +33,8 @@ public class TestCreateSchedule {
         OutputStream output = new ByteArrayOutputStream();
         Context context = req.generateContext("CreateSchedulePUT") ;
 
-        CreateScheduleHandler csh = new CreateScheduleHandler();
-        csh.handleRequest(input, output, context);
+        CreateScheduleHandler createScheduleHandler = new CreateScheduleHandler();
+        createScheduleHandler.handleRequest(input, output, context);
 
         LambdaResponse response = Handler.gson.fromJson(output.toString(), LambdaResponse.class);
         CreateSchedulePUTResponse resp = Handler.gson.fromJson(response.body, CreateSchedulePUTResponse.class);
