@@ -40,7 +40,7 @@ public class Main {
     		//schedules = s.getSchedule();
     		
     		MeetingDAO mdao = new MeetingDAO();
-    		//mdao.addMeeting(new Meeting("a","b",LocalDateTime.now(), LocalDateTime.now(), null, "JimJim"));
+    		mdao.addMeeting(new Meeting("a","b",LocalDateTime.now(), LocalDateTime.now(), null, "JimJim"));
     		//Meeting m = mdao.getMeeting("91194d6f-dafb-47f2-809c-38029d0a5df3");
     		//System.out.println(m.getParticipant_name() + "'s meeting");
     		System.out.println(mdao.getAllMeetings().get(0).getParticipant_name());
@@ -49,7 +49,7 @@ public class Main {
     		//}
     		
     		TimesNotAvailableDAO tnadao = new TimesNotAvailableDAO();
-    		//tnadao.addTimeNotAvailable(new TimeNotAvailable("JimTime",null,LocalDateTime.now(),LocalDateTime.now(),null));
+    		tnadao.addTimeNotAvailable(new TimeNotAvailable("JimTime2",null,LocalDateTime.now(),LocalDateTime.now(),null));
     		//System.out.println(tnadao.getTimeNotAvailable("35333e0d-23b3-4f04-a13c-8058caa8d998").getSchedule_id());
     		System.out.println(tnadao.getAllTimesNotAvailable().get(0).getSchedule_id());
     	}
