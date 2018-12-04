@@ -1,8 +1,16 @@
 package com.lesath.apps.controller.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.lesath.apps.controller.Handler;
+import com.lesath.apps.util.HTTPMethod;
+import com.lesath.apps.util.LocalDateTimeJsonConvertor;
 
 public class APIGatewayRequest {
 	String path = "/";
@@ -15,11 +23,11 @@ public class APIGatewayRequest {
 	
 	String body = null;
 	
-	String httpMethod;
+	HTTPMethod httpMethod;
 	String resource = "test";
 	
 	public APIGatewayRequest() {
-		headers = new HashMap<String, String>();
+		headers = new HashMap<>();
 		
 		headers.put("Accept", "*/*");
 	    headers.put("CloudFront-Viewer-Country", "US");
@@ -43,7 +51,53 @@ public class APIGatewayRequest {
 	    headers.put("CloudFront-Is-Desktop-Viewer", "true");
 	}
 	
-	public InputStream generateRequest() {
-		return null;
+	public InputStream generateRequest(HTTPMethod method) {
+		this.httpMethod = method;
+
+		String rep = Handler.gson.toJson(this);
+
+		return new ByteArrayInputStream(rep.getBytes());
+	}
+
+	public boolean addHeader(String key, String value) {
+		if (this.headers == null) {
+			this.headers = new HashMap<>();
+		}
+
+		this.headers.put(key, value);
+		return true;
+	}
+
+	public boolean addPathParamater(String key, String value) {
+		if (this.pathParameters == null) {
+			this.pathParameters = new HashMap<>();
+		}
+
+		this.pathParameters.put(key, value);
+		return true;
+	}
+
+	public boolean addQueryParameter(String key, String value) {
+		if (this.queryStringParameters == null) {
+			this.queryStringParameters = new HashMap<>();
+		}
+
+		this.queryStringParameters.put(key, value);
+		return true;
+	}
+
+	public boolean addStageVariable(String key, String value) {
+		if (this.stageVariables == null) {
+			this.stageVariables = new HashMap<>();
+		}
+
+		this.stageVariables.put(key, value);
+		return true;
+	}
+
+	public boolean setBody(String body) {
+		this.body = body;
+
+		return true;
 	}
 }
