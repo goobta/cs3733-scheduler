@@ -1,6 +1,6 @@
 # Scheduler [Lesath Team]
 
-This is our term project for cs3733 (Software Engineering)
+This is our term project for cs3733 (Software Engineering).
 
 ## API Routes & Use Cases
 The following are the routes and the associated use cases.
