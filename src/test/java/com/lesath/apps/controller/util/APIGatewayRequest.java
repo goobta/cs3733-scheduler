@@ -6,11 +6,13 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.amazonaws.services.lambda.runtime.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lesath.apps.controller.Handler;
 import com.lesath.apps.util.HTTPMethod;
 import com.lesath.apps.util.LocalDateTimeJsonConvertor;
+import com.lesath.apps.util.TestContext;
 
 public class APIGatewayRequest {
 	String path = "/";
@@ -99,5 +101,12 @@ public class APIGatewayRequest {
 		this.body = body;
 
 		return true;
+	}
+
+	public Context generateContext(String apiCall) {
+		TestContext ctx = new TestContext();
+
+		ctx.setFunctionName(apiCall);
+		return ctx;
 	}
 }
