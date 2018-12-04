@@ -1,4 +1,4 @@
-package com.lesath.apps.demo;
+package com.lesath.apps.util;
 
 import com.amazonaws.services.lambda.runtime.ClientContext;
 import com.amazonaws.services.lambda.runtime.CognitoIdentity;

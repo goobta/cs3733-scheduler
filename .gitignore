@@ -37,6 +37,9 @@ src/main/html/node_modules/
 .settings/
 .bin/
 
+# IntelliJ MR
+.idea/
+
 # NodeJS Stuff
 **/package-lock.json
 **/yarn.lock
