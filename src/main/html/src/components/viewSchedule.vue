@@ -23,7 +23,7 @@
 						Friday
 					</th>
 				</tr>
-				<tr v-for='time in times'>
+				<tr v-for='time in currentWeek'>
 					<td>
 						{{ time.time }}
 					</td>
@@ -44,7 +44,14 @@ export default {
 			times: [],
 			uuid: null,
 			dateRange: null,
-			newMeeting: {}
+			newMeeting: {},
+			page: 0
+		}
+	},
+	computed: {
+		currentWeek: function () {
+			//localhost:8080/#/viewSchedule?uuid=41eea1a1-dcf1-4e77-ae6e-049a2c0650c3
+			return this.times.slice(this.page*5, 5)
 		}
 	},
 	methods: {
@@ -92,8 +99,12 @@ export default {
 							open: false
 						});
 					}
-					//TODO: Weekend handling, if it's friday add 3 instead
-					cursorDate.setDate(cursorDate.getDate() + 1)
+
+					if (cursorDate.getDay() == 5){
+						cursorDate.setDate(cursorDate.getDate() + 3);
+					} else {
+						cursorDate.setDate(cursorDate.getDate() + 1);
+					}
 				}
 
 				this.times.push({
