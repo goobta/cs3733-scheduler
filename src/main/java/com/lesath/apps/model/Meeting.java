@@ -101,4 +101,23 @@ public class Meeting {
 	public void setParticipant_name(String participant_name) {
 		this.participant_name = participant_name;
 	}
+	
+	public boolean equals(Meeting m) {
+		if(m == null) {
+			return false;
+		}
+		boolean accum = true;
+		accum &= m.getSchedule_id().equals(this.schedule_id);
+		accum &= m.getUuid().equals(this.uuid);
+		accum &= m.getStart_time().equals(this.start_time);
+		accum &= m.getCreated_at().equals(this.created_at);
+		if(m.getDeleted_at() != null && this.deleted_at != null) {
+			accum &= m.getDeleted_at().equals(this.deleted_at);
+		}
+		else if (m.getDeleted_at() != null || this.deleted_at != null){
+			accum = false;
+		}
+		accum &= m.getParticipant_name().equals(this.participant_name);
+		return accum;
+	}
 }

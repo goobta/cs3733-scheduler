@@ -30,14 +30,15 @@ public class TestMeetingDAO {
 			meeting.setUuid(uuid);
 			Meeting gotMeeting = mdao.getMeeting(uuid);
 			ArrayList<Meeting> gotMeetings = mdao.getAllMeetings();
-			//assertEquals(gotMeeting.getUuid(), meeting.getUuid());
+			assertTrue(gotMeeting.equals(meeting));
 			boolean worked = false;
 			for(Meeting m: gotMeetings) {
-				worked |= (m.getUuid().equals(meeting.getUuid()));
+				worked |= m.equals(meeting);
 			}
 			assertTrue(worked);
 		} catch(Exception e) {
 			System.out.println("MeetingDAO test failed");
+			assertTrue(false);
 		} finally {
 			try {
 				DatabaseUtil.connect().prepareStatement("DELETE FROM Meetings WHERE uuid=\"" + uuid + "\";").execute();
