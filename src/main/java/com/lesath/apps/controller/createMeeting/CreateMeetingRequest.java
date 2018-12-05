@@ -1,4 +1,4 @@
-package com.lesath.apps.controller;
+package com.lesath.apps.controller.createMeeting;
 
 import com.lesath.apps.controller.model.MeetingInput;
 import com.lesath.apps.model.Meeting;
