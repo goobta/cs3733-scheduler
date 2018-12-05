@@ -21,10 +21,11 @@ public class Schedule {
 	LocalDateTime deleted_at;
 	
 	String organizerId = "01e113d8-3cc3-4fc1-90a2-81f65cfcda16";
+	
 	LocalDateTime startDateTime;
 	LocalDateTime endDateTime;
 	/**
-	 * @param uuid SHOLD BE NULL
+	 * @param uuid SHOULD BE NULL
 	 * @param name
 	 * @param duration
 	 * @param start_date
@@ -51,6 +52,7 @@ public class Schedule {
 		this.endDateTime = LocalDateTime.of(end_date, daily_end_time);
 		
 	}
+	
 	/**
 	 * @return the uuid
 	 */
@@ -158,5 +160,45 @@ public class Schedule {
 	 */
 	public void setDeleted_at(LocalDateTime deleted_at) {
 		this.deleted_at = deleted_at;
+	}
+	/**
+	 * @return the organizerId
+	 */
+	public String getOrganizerId() {
+		return organizerId;
+	}
+	/**
+	 * @param organizerId the organizerId to set
+	 */
+	public void setOrganizerId(String organizerId) {
+		this.organizerId = organizerId;
+	}
+	
+	public boolean equals(Schedule s) {
+		if(s == null) {
+			return false;
+		}
+		boolean accum = true;
+		accum &= s.getUuid().equals(this.uuid);
+		accum &= s.getName().equals(this.name);
+		accum &= s.getDuration() == this.duration;
+		accum &= s.getStart_date().equals(this.start_date);
+		accum &= s.getEnd_date().equals(this.end_date);
+		accum &= s.getDaily_start_time().equals(this.daily_start_time);
+		accum &= s.getDaily_end_time().equals(this.daily_end_time);
+		accum &= s.getCreated_at().equals(this.created_at);
+		if(s.getDeleted_at() != null && this.deleted_at != null) {
+			accum &= s.getDeleted_at().equals(this.deleted_at);
+		}
+		else if (s.getDeleted_at() != null || this.deleted_at != null){
+			accum = false;
+		}
+		if(s.getOrganizerId() != null && this.organizerId != null) {
+			accum &= s.getOrganizerId().equals(this.organizerId);
+		}
+		else if (s.getOrganizerId() != null || this.organizerId != null){
+			accum = false;
+		}
+		return accum;
 	}
 }
