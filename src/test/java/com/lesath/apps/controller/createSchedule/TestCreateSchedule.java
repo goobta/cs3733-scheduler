@@ -1,9 +1,13 @@
 package com.lesath.apps.controller.createSchedule;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.google.gson.JsonObject;
 import com.lesath.apps.controller.*;
 import com.lesath.apps.controller.model.ScheduleConfig;
 import com.lesath.apps.util.HTTPMethod;
+import com.lesath.apps.util.JSONFactory;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,7 +19,7 @@ import java.time.LocalDateTime;
 
 public class TestCreateSchedule {
     @Test
-    public void AddScheduleSuccess() throws IOException {
+    public void AddScheduleSuccess() throws IOException, ParseException {
         ScheduleConfig sc = new ScheduleConfig(
                 "CreateScheduleHandlerTest",
                 60,
@@ -24,7 +28,7 @@ public class TestCreateSchedule {
         );
 
         TestAPIGatewayRequest req = new TestAPIGatewayRequest();
-        req.setBody(LambdaHandler.gson.toJson(sc));
+        req.setBody(JSONFactory.objectToJsonObject(sc));
 
         InputStream input = req.generateRequest(HTTPMethod.PUT);
         OutputStream output = new ByteArrayOutputStream();

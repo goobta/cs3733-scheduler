@@ -1,5 +1,6 @@
 package com.lesath.apps.controller;
 
+import com.google.gson.JsonObject;
 import com.lesath.apps.util.HTTPMethod;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class APIGatewayRequest {
     Map<String, String> queryStringParameters = null;
     Map<String, String> stageVariables = null;
 
-    String body = null;
+    JsonObject body = null;
 
     HTTPMethod httpMethod;
     String resource;
@@ -55,7 +56,7 @@ public class APIGatewayRequest {
         return true;
     }
 
-    public boolean setBody(String body) {
+    public boolean setBody(JsonObject body) {
         this.body = body;
 
         return true;
