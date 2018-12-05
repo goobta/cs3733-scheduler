@@ -2,17 +2,18 @@ package com.lesath.apps.controller.model;
 
 import java.time.LocalDateTime;
 
-public class Meeting {
+//This is different than the swagger name. It is named Meeting in swagger.
+public class MeetingInput {
 
 	//The uuid in the table
-	String id;
+	String uuid;
 	String participantName;
 	LocalDateTime startDateTime;
 	
 	//You still have to grab meeting from the schedule table.
 	
-	public Meeting(String id,String participantName,LocalDateTime startDateTime) {
-		this.id = id;
+	public MeetingInput(String uuid,String participantName,LocalDateTime startDateTime) {
+		this.uuid = uuid;
 		this.participantName = participantName;
 		this.startDateTime = startDateTime;		
 	}
@@ -22,14 +23,14 @@ public class Meeting {
 	/**
 	 * @return the id
 	 */
-	public String getId() {
-		return id;
+	public String getUuid() {
+		return uuid;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(String id) {
-		this.id = id;
+	public void setId(String uuid) {
+		this.uuid = uuid;
 	}
 	/**
 	 * @return the participantName
