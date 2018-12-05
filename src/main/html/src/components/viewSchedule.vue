@@ -104,14 +104,13 @@ export default {
 		},
 		async createMeeting (day, time) {
 			this.newMeeting.scheduleId = this.uuid;
-			//What happens if it crosses over a month?
 			let participantName = prompt("Enter Name:")
 			this.newMeeting = {
 				name: participantName,
 			}
 			this.newMeeting.startTime = new Date(day);
 			this.newMeeting.startTime.setHours(Math.floor(time/60), time%60)
-			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting/?scheduleId=' + this.uuid,{
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting?scheduleId=' + this.uuid,{
 				method: PUT,
 				body: JSON.stringify(this.newMeeting),
 				headers:{
