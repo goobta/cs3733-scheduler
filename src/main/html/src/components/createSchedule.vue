@@ -49,7 +49,7 @@
       <div class='field-body'>
         <div class='field'>
           <p class='controll'>
-            <vue-timepicker v-model='schedule.startTime' :minute-interval='5'></vue-timepicker>
+            <vue-timepicker v-model='schedule.startTime' :minute-interval='15'></vue-timepicker>
           </p>
         </div>
       </div>
@@ -124,8 +124,8 @@ export default {
   },
   methods: {
     async putSchedule () {
-      this.schedule.startDateTime.setHours(this.schedule.startTime.HH, this.schedule.startTime.mm)
-      this.schedule.endDateTime.setHours(this.schedule.endTime.HH, this.schedule.endTime.mm)
+      this.schedule.startDateTime.setUTCHours(this.schedule.startTime.HH, this.schedule.startTime.mm)
+      this.schedule.endDateTime.setUTCHours(this.schedule.endTime.HH, this.schedule.endTime.mm)
 
       delete this.schedule.startTime;
       delete this.schedule.endTime;
