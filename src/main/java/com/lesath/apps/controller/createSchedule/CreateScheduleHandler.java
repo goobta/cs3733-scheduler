@@ -30,11 +30,14 @@ public class CreateScheduleHandler extends LambdaHandler {
 
             this.response.setStatusCode(200);
             this.response.setBody(gson.toJson(res));
-        } else {
+            return true;
+        } 
+        else {
             this.response.setStatusCode(500);
+            return false;
         }
 
-        return true;
+        
     }
 
     @Override

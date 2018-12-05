@@ -37,7 +37,7 @@ public class MeetingDAO {
             ps.setString(1, m.getSchedule_id());
             ps.setString(2, uuid);
             ps.setString(3, m.getStart_time().toString());
-            ps.setString(4, m.getCreated_at().toString());
+            ps.setString(4, LocalDateTime.now().toString().replaceAll("T", " "));
             if(m.getDeleted_at() != null) {
             	ps.setString(5, m.getDeleted_at().toString().replaceAll("T", " "));
             }
