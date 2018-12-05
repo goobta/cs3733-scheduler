@@ -1,4 +1,4 @@
-package com.lesath.apps.controller;
+package com.lesath.apps.controller.getSchedule;
 
 import java.io.BufferedReader;
 import java.io.IOException;

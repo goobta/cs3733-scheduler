@@ -1,4 +1,4 @@
-package com.lesath.apps.demo;
+package com.lesath.apps.util;
 
 import java.io.IOException;
 import java.io.InputStream;

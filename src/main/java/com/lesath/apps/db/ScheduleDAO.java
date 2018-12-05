@@ -27,7 +27,7 @@ public class ScheduleDAO {
     /**
      * 
      * @param s - Schedule object to be added as a row in table Schedule
-     * @return returns true when method is able to add the tuple. 
+     * @return returns the UUID of the schedule that was created 
      * @throws Exception given when fails to add the row in the table.
      */
     public String addSchedule(Schedule s) throws Exception {
@@ -48,9 +48,9 @@ public class ScheduleDAO {
             temp.replaceAll("T", " ");
             ps.setString(8, temp);
             if(s.getDeleted_at() != null) {
-            temp = s.getDeleted_at().toString();
-            temp.replaceAll("T", " ");
-            ps.setString(9, temp);
+            	temp = s.getDeleted_at().toString();
+            	temp.replaceAll("T", " ");
+            	ps.setString(9, temp);
             }
             else {
             	ps.setString(9, null);
