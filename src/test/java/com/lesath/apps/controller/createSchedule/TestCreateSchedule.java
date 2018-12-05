@@ -28,7 +28,7 @@ public class TestCreateSchedule {
         );
 
         TestAPIGatewayRequest req = new TestAPIGatewayRequest();
-        req.setBody(JSONFactory.objectToJsonObject(sc));
+        req.setBody(LambdaHandler.gson.toJson(sc));
 
         InputStream input = req.generateRequest(HTTPMethod.PUT);
         OutputStream output = new ByteArrayOutputStream();
