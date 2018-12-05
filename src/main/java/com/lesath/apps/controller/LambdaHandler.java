@@ -49,6 +49,8 @@ public abstract class LambdaHandler implements RequestStreamHandler {
 			JSONParser parser = new JSONParser();
 			JSONObject event = (JSONObject) parser.parse(reader);
 
+			logger.log("event: " + event.toJSONString());
+			System.out.println("event: " + event.toJSONString());
 			System.out.println(event.toJSONString());
 
 			APIGatewayRequest request = gson.fromJson(event.toJSONString(), APIGatewayRequest.class);
