@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class LambdaResponse {
     public Map<String, String> headers = null;
-    // public int statusCode;
+    public int statusCode;
     public String body;
 
     public boolean addHeader(String key, String value) {
@@ -17,11 +17,11 @@ public class LambdaResponse {
         return true;
     }
 
-//    public boolean setStatusCode(int code) {
-//        this.statusCode = code;
-//        return true;
-//    }
-//
+    public boolean setStatusCode(int code) {
+        this.statusCode = code;
+        return true;
+    }
+
     public boolean setBody(String body) {
         this.body = body;
         return true;

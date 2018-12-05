@@ -72,13 +72,13 @@ public abstract class LambdaHandler implements RequestStreamHandler {
 					handleDELETE(request);
 					break;
 				default:
-					//response.setStatusCode(500);
+					response.setStatusCode(500);
 			}
 		} catch (ParseException pe) {
 			pe.printStackTrace();
 			logger.log(pe.getStackTrace().toString());
 
-			//response.setStatusCode(400);
+			response.setStatusCode(400);
 		}
 
 		String responseJson = gson.toJson(response);
