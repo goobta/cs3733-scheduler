@@ -26,7 +26,7 @@ public class CreateScheduleHandler extends LambdaHandler {
 
         CreateScheduleResponse res;
         if(!uuid.isEmpty()) {
-            res = new CreateScheduleResponse(200, uuid);
+            res = new CreateScheduleResponse(uuid);
 
             this.response.setStatusCode(200);
             this.response.setBody(gson.toJson(res));
