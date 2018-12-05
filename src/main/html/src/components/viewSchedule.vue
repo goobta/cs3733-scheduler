@@ -105,21 +105,22 @@ export default {
 		async createMeeting (day, time) {
 			this.newMeeting.scheduleId = this.uuid;
 			//What happens if it crosses over a month?
-			this.newMeeting.meeting = {
-				name: prompt("Enter Name:")
+			let participantName = prompt("Enter Name:")
+			this.newMeeting = {
+				name: participantName,
 			}
-			this.newMeeting.dayTime = new Date(day);
-			this.newMeeting.dayTime.setHours(Math.floor(time/60), time%60)
-			// await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting',{
-			// 	method: PUT,
-			// 	body: JSON.stringify(this.schedule),
-			// 	headers:{
-		 //          'Content-Type': 'application/json'
-		 //        },
-			// })
-			// .then(res => res.json())
-	  //       .then(response => alert("Secret code: " + response.meetingUuid))
-	  //       .catch(error => console.error('Error:', error));
+			this.newMeeting.startTime = new Date(day);
+			this.newMeeting.startTime.setHours(Math.floor(time/60), time%60)
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting/?scheduleId=' + this.uuid,{
+				method: PUT,
+				body: JSON.stringify(this.newMeeting),
+				headers:{
+		          'Content-Type': 'application/json'
+		        },
+			})
+			.then(res => res.json())
+	        .then(response => alert("Secret code: " + response.meetingUuid))
+	        .catch(error => console.error('Error:', error));
 		}
 	},
 	async created () {

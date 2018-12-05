@@ -28,11 +28,11 @@
 						{{ time.time }}
 					</td>
 					<td v-for='timeSlot in time.days' v-bind:class="[ 'noPadding', !timeSlot.inBounds ? 'notInBounds' : '' ]">
-						<div v-if='timeSlot.inBounds' class='columns noMargin'>
-							<div v-bind:class='[ "column", timeSlot.available ? "has-background-success" : "has-background-grey-light"  ]'>
+						<div v-if='timeSlot.inBounds' class='columns noMargin' @click='toggleTimeslot(timeSlot)'>
+							<div v-bind:class='[ "noselect", "column", timeSlot.available ? "has-background-success" : "has-background-grey-light"  ]'>
 								Open
 							</div>
-							<div v-bind:class='[ "column", !timeSlot.available ? "has-background-danger" : "has-background-grey-light"  ]'>
+							<div v-bind:class='[ "noselect", "column", !timeSlot.available ? "has-background-danger" : "has-background-grey-light"  ]'>
 								Close
 							</div>
 						</div>
@@ -111,6 +111,14 @@ export default {
 				});
 			}
 		},
+		toggleTimeslot (timeslot) {
+			timeslot.available = !timeslot.available;
+			if (timeslot.available) {
+				//If avaiable is true delete unavailability
+			} else {
+				//If avaiable is false create unavailability
+			}
+		} 
 	},
 	async created () {
 		this.uuid = this.$route.query.uuid;
@@ -128,5 +136,14 @@ export default {
 }
 .noPadding {
 	padding: 0px !important;
+}
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }
 </style>
