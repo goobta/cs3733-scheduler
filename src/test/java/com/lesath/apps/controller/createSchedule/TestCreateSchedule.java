@@ -1,12 +1,10 @@
 package com.lesath.apps.controller.createSchedule;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.lesath.apps.controller.CreateScheduleHandler;
-import com.lesath.apps.controller.Handler;
+import com.lesath.apps.controller.*;
 import com.lesath.apps.controller.model.ScheduleConfig;
-import com.lesath.apps.controller.util.APIGatewayRequest;
-import com.lesath.apps.controller.util.LambdaResponse;
 import com.lesath.apps.util.HTTPMethod;
+import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +16,7 @@ import java.time.LocalDateTime;
 
 public class TestCreateSchedule {
     @Test
-    public void AddScheduleSuccess() throws IOException {
+    public void AddScheduleSuccess() throws IOException, ParseException {
         ScheduleConfig sc = new ScheduleConfig(
                 "CreateScheduleHandlerTest",
                 60,
@@ -26,8 +24,8 @@ public class TestCreateSchedule {
                 LocalDateTime.now()
         );
 
-        APIGatewayRequest req = new APIGatewayRequest();
-        req.setBody(Handler.gson.toJson(sc));
+        TestAPIGatewayRequest req = new TestAPIGatewayRequest();
+        req.setBody(LambdaHandler.gson.toJson(sc));
 
         InputStream input = req.generateRequest(HTTPMethod.PUT);
         OutputStream output = new ByteArrayOutputStream();
@@ -36,8 +34,8 @@ public class TestCreateSchedule {
         CreateScheduleHandler createScheduleHandler = new CreateScheduleHandler();
         createScheduleHandler.handleRequest(input, output, context);
 
-        LambdaResponse response = Handler.gson.fromJson(output.toString(), LambdaResponse.class);
-        CreateSchedulePUTResponse resp = Handler.gson.fromJson(response.body, CreateSchedulePUTResponse.class);
+        LambdaResponse response = LambdaHandler.gson.fromJson(output.toString(), LambdaResponse.class);
+        CreateSchedulePUTResponse resp = LambdaHandler.gson.fromJson(response.body, CreateSchedulePUTResponse.class);
 
         Assert.assertNotNull(resp.scheduleUuid);
     }

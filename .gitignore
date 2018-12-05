@@ -39,6 +39,7 @@ src/main/html/node_modules/
 
 # IntelliJ MR
 .idea/
+.attach_*
 
 # NodeJS Stuff
 **/package-lock.json
