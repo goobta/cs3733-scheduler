@@ -28,7 +28,7 @@
 						{{ time.time }}
 					</td>
 					<td v-for='timeSlot in time.days' v-bind:class="{ unavailable: !timeSlot.open }">
-						<button v-if='timeSlot.open' class='button'>Free</button>
+						<button v-if='timeSlot.open' class='button' @click='createMeeting(timeSlot.day, timeSlot.time)'>Free</button>
 					</td>
 				</tr>
 			</tbody>
@@ -43,7 +43,8 @@ export default {
 			schedule: {},
 			times: [],
 			uuid: null,
-			dateRange: null
+			dateRange: null,
+			newMeeting: {}
 		}
 	},
 	methods: {
@@ -60,27 +61,65 @@ export default {
 			let startDate = new Date(this.schedule.startDateTime);
 			let endDate = new Date(this.schedule.endDateTime);
 
-			this.dateRange = '(' + startDate.getMonth() + '/' + startDate.getDate() + '-' + endDate.getMonth() + '/' + endDate.getDate() + ')';
-
+			this.dateRange = '(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + '-' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + ')';
 			for (let i = startMinutes; i < endMinutes; i = i + this.schedule.meetingDuration) {
 				let temp = [];
-				for (let j = 0; j <= 4; j ++) {
-					if (j >= startDate.getDay() - 1 && j < endDate.getDay()) {
+				let cursorDate = new Date(this.schedule.startDateTime);
+				let lastDate = new Date(this.schedule.endDateTime);
+				cursorDate.setHours(0,0);
+				lastDate.setHours(23,59);
+
+				//Sets cursor to Monday of first week
+				var day = cursorDate.getDay() || 7;
+				if ( day !== 1 ) {             
+				    cursorDate.setHours(-24 * (day - 1));
+				}
+
+				//Sets last date to Friday of last week
+				var day = lastDate.getDay() || 7;
+				if ( day !== 5 ) {             
+				    lastDate.setHours(24 * (5-day));
+				}
+				while (cursorDate <= lastDate) {
+					if (cursorDate >= new Date(startDate).setHours(0,0,0) && cursorDate <= new Date(endDate.setHours(23,59,59))) {
 						temp.push({
+							day: cursorDate.toString(),
+							time: i,
 							open: true
-						});
+						})
 					} else {
 						temp.push({
 							open: false
 						});
 					}
+					//TODO: Weekend handling, if it's friday add 3 instead
+					cursorDate.setDate(cursorDate.getDate() + 1)
 				}
+
 				this.times.push({
-					time: (Math.floor(i/60) - 5) + ':' + (i%60 == 0 ? '00': i%60),
+					time: Math.floor(i/60) + ':' + (i%60 == 0 ? '00': (i%60 == 5 ? '05' : i%60)),
 					days: temp
 				});
 			}
-			console.log(this.times);
+		},
+		async createMeeting (day, time) {
+			this.newMeeting.scheduleId = this.uuid;
+			//What happens if it crosses over a month?
+			this.newMeeting.meeting = {
+				name: prompt("Enter Name:")
+			}
+			this.newMeeting.dayTime = new Date(day);
+			this.newMeeting.dayTime.setHours(Math.floor(time/60), time%60)
+			// await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting',{
+			// 	method: PUT,
+			// 	body: JSON.stringify(this.schedule),
+			// 	headers:{
+		 //          'Content-Type': 'application/json'
+		 //        },
+			// })
+			// .then(res => res.json())
+	  //       .then(response => alert("Secret code: " + response.meetingUuid))
+	  //       .catch(error => console.error('Error:', error));
 		}
 	},
 	async created () {
