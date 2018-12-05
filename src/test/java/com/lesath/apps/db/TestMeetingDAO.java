@@ -37,7 +37,7 @@ public class TestMeetingDAO {
 			}
 			assertTrue(worked);
 		} catch(Exception e) {
-			System.out.println("MeetingDAO test failed");
+			System.out.println("MeetingDAO test failed: " + e.getMessage());
 			assertTrue(false);
 		} finally {
 			try {

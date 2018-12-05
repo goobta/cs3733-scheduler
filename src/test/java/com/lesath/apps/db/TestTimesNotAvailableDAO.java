@@ -37,7 +37,7 @@ public class TestTimesNotAvailableDAO {
 			}
 			assertTrue(worked);
 		} catch(Exception e) {
-			System.out.println("TimesNotAvailableDAO test failed");
+			System.out.println("TimesNotAvailableDAO test failed: " + e.getMessage());
 			assertTrue(false);
 		} finally {
 			try {
