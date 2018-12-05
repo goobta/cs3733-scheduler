@@ -1,5 +1,7 @@
-package com.lesath.apps.controller;
+package com.lesath.apps.controller.createSchedule;
 
+import com.lesath.apps.controller.APIGatewayRequest;
+import com.lesath.apps.controller.LambdaHandler;
 import com.lesath.apps.controller.model.ScheduleConfig;
 import com.lesath.apps.util.HTTPMethod;
 

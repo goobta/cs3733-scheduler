@@ -1,4 +1,4 @@
-package com.lesath.apps.controller;
+package com.lesath.apps.controller.createSchedule;
 
 public class CreateScheduleResponse {
 	int statusCode;

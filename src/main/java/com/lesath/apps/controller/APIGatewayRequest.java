@@ -1,6 +1,5 @@
 package com.lesath.apps.controller;
 
-import com.google.gson.JsonPrimitive;
 import com.lesath.apps.util.HTTPMethod;
 
 import java.util.HashMap;
@@ -10,15 +9,15 @@ public class APIGatewayRequest {
     String path;
     boolean isBase64Encoded;
 
-    Map<String, String> headers;
-    Map<String, String> pathParameters = null;
-    Map<String, String> queryStringParameters = null;
-    Map<String, String> stageVariables = null;
+    public Map<String, String> headers;
+    public Map<String, String> pathParameters = null;
+    public Map<String, String> queryStringParameters = null;
+    public Map<String, String> stageVariables = null;
 
-    String body = null;
+    public String body = null;
 
-    HTTPMethod httpMethod;
-    String resource;
+    public HTTPMethod httpMethod;
+    public String resource;
 
     public boolean addHeader(String key, String value) {
         if (this.headers == null) {

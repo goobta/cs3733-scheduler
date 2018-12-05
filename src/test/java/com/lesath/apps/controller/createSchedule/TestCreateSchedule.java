@@ -1,12 +1,9 @@
 package com.lesath.apps.controller.createSchedule;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.google.gson.JsonObject;
 import com.lesath.apps.controller.*;
 import com.lesath.apps.controller.model.ScheduleConfig;
 import com.lesath.apps.util.HTTPMethod;
-import com.lesath.apps.util.JSONFactory;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
