@@ -23,7 +23,7 @@
       <div class='field-body'>
         <div class='field'>
           <p class='controll'>
-            <datepicker class='field' v-model="schedule.startDate"></datepicker>
+            <datepicker class='field' v-model="schedule.startDateTime"></datepicker>
           </p>
         </div>
       </div>
@@ -36,7 +36,7 @@
       <div class='field-body'>
         <div class='field'>
           <p class='controll'>
-            <datepicker class='field' v-model="schedule.endDate"></datepicker>
+            <datepicker class='field' v-model="schedule.endDateTime"></datepicker>
           </p>
         </div>
       </div>
@@ -49,7 +49,7 @@
       <div class='field-body'>
         <div class='field'>
           <p class='controll'>
-            <vue-timepicker :minute-interval='5' v-model='schedule.startTime'></vue-timepicker>
+            <vue-timepicker v-model='schedule.startTime' :minute-interval='15'></vue-timepicker>
           </p>
         </div>
       </div>
@@ -62,7 +62,7 @@
       <div class='field-body'>
         <div class='field'>
           <p class='controll'>
-            <vue-timepicker minute-interval='15' v-model='schedule.endTime'></vue-timepicker>
+            <vue-timepicker v-model='schedule.endTime' :minute-interval='15'></vue-timepicker>
           </p>
         </div>
       </div>
@@ -76,17 +76,21 @@
         <div class='field select'>
           <p class='controll'>
                 <select v-model="schedule.meetingLength">
-                  <option value='10'>10</option>
-                  <option value='15'>15</option>
-                  <option value='20'>20</option>
-                  <option value='30'>30</option>
-                  <option value='60'>60</option>
+                  <option :value='10'>10</option>
+                  <option :value='15'>15</option>
+                  <option :value='20'>20</option>
+                  <option :value='30'>30</option>
+                  <option :value='60'>60</option>
                 </select>
           </p>
         </div>
       </div>
     </div>
-    <button @click='putSchedule()' class='button'>Create</button>
+    <div class='buttons'>
+      <button @click='putSchedule()' class='button'>Create</button></br>
+      <button @click='redirect()' class='button' v-if='url != null'>View Schedule</button>
+    </div>
+    <p v-if='url != null'>Participant URL:</p><a :href='url'>{{ url }}</a>
   </div>
 </template>
 
@@ -104,6 +108,8 @@ export default {
   },
   data: function() {
     return {
+      url: null,
+      uuid: null,
       schedule: {
         startTime: {
           HH: "08",
@@ -118,22 +124,25 @@ export default {
   },
   methods: {
     async putSchedule () {
-      let tempStart = this.schedule.startTime.HH + ':' + this.schedule.startTime.mm;
-      let tempEnd = this.schedule.endTime.HH + ':' + this.schedule.endTime.mm;
+      this.schedule.startDateTime.setUTCHours(this.schedule.startTime.HH, this.schedule.startTime.mm)
+      this.schedule.endDateTime.setUTCHours(this.schedule.endTime.HH, this.schedule.endTime.mm)
 
       delete this.schedule.startTime;
       delete this.schedule.endTime;
 
-      this.schedule.startTime = tempStart
-      this.schedule.endTime = tempEnd;
-
-      let res = await fetch(api + '/organizer/schedule', {
+      await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/organizerSchedule', {
         method: 'PUT',
         body: JSON.stringify(this.schedule),
         headers:{
           'Content-Type': 'application/json'
         }
-      })
+      }).then(res => res.json())
+        .then(response => this.uuid = response.scheduleUuid)
+        .catch(error => console.error('Error:', error));
+      this.url = 'https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html#/viewSchedule?uuid=' + this.uuid
+    },
+    redirect () {
+      window.location.href = 'https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html#/editSchedule?uuid=' + this.uuid;
     }
   }
 }
