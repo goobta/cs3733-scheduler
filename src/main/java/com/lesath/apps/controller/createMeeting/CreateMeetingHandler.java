@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.lesath.apps.controller.APIGatewayRequest;
 import com.lesath.apps.controller.LambdaHandler;
 import com.lesath.apps.controller.model.MeetingInput;
+import com.lesath.apps.db.MeetingDAO;
 import com.lesath.apps.util.HTTPMethod;
 
 public class CreateMeetingHandler extends LambdaHandler {
@@ -15,6 +16,7 @@ public class CreateMeetingHandler extends LambdaHandler {
 
         this.handledMethods = new ArrayList<>();
         handledMethods.add(HTTPMethod.PUT);
+        handledMethods.add(HTTPMethod.DELETE);
 
         return true;
     }
@@ -59,7 +61,15 @@ public class CreateMeetingHandler extends LambdaHandler {
 
     @Override
     protected boolean handleDELETE(APIGatewayRequest request) {
-        return false;
+        String scheduleId = request.queryStringParameters.get("scheduleId");
+        String meetingId = request.queryStringParameters.get("meetingId");
+
+        MeetingDAO dao = new MeetingDAO();
+        dao.deleteMeeting(meetingId);
+
+        this.response.setStatusCode(204);
+
+        return true;
     }
     
     
