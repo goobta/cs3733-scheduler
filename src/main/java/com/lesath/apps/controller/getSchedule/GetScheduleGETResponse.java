@@ -8,6 +8,7 @@ import com.lesath.apps.model.Schedule;
 import com.lesath.apps.model.TimeNotAvailable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetScheduleGETResponse {
@@ -26,7 +27,9 @@ public class GetScheduleGETResponse {
     LocalDateTime deleted_at;
 
     List<Meeting> meetings;
-    List<TimeNotAvailable> timesNotAvailables;
+    List<TimeNotAvailable> timesNotAvailableObj;
+
+    List<LocalDateTime> timesNotAvailable;
 
     public GetScheduleGETResponse(Schedule s) {
         this.uuid = s.getUuid();
@@ -60,12 +63,20 @@ public class GetScheduleGETResponse {
         TimesNotAvailableDAO tnaDAO = new TimesNotAvailableDAO();
 
         try {
-            this.timesNotAvailables = tnaDAO.getAllTimesNotAvailableForScheduleId(this.uuid);
+            this.timesNotAvailableObj = tnaDAO.getAllTimesNotAvailableForScheduleId(this.uuid);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
         return true;
+    }
+
+    public void generateRequest() {
+        this.timesNotAvailable = new ArrayList<>();
+
+        for (TimeNotAvailable timeNotAvailable : this.timesNotAvailableObj) {
+            this.timesNotAvailable.add(timeNotAvailable.getStart_time());
+        }
     }
 }
