@@ -91,16 +91,20 @@ public class ScheduleDAO {
         }
     }
    
-   public Schedule getSchedule(String uuid) throws Exception {
-	   Schedule schedule;
-	   Statement statement = conn.createStatement();
-	   String query = "SELECT * FROM Schedules WHERE uuid =\"" + uuid + "\";";
-	   ResultSet resultSet = statement.executeQuery(query);
-	   resultSet.next();
-	   schedule = generateSchedule(resultSet);
-	   resultSet.close();
-	   statement.close();
-	   return schedule;
+   public Schedule getSchedule(String uuid) {
+	   try {
+		   Schedule schedule;
+		   Statement statement = conn.createStatement();
+		   String query = "SELECT * FROM Schedules WHERE uuid =\"" + uuid + "\";";
+		   ResultSet resultSet = statement.executeQuery(query);
+		   resultSet.next();
+		   schedule = generateSchedule(resultSet);
+		   resultSet.close();
+		   statement.close();
+		   return schedule;
+	   } catch(Exception e) {
+		   return null;
+	   }
    }
    
    public boolean deleteSchedule(String uuid) {
