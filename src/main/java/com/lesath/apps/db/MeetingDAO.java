@@ -113,7 +113,7 @@ public class MeetingDAO {
 			resultSet.close();
 		}
 		statement.close();
-		
+
 		return meetings;
 	}
 	
