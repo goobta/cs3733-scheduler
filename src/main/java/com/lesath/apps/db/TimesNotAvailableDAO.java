@@ -3,9 +3,7 @@
  */
 package com.lesath.apps.db;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -93,6 +91,26 @@ public class TimesNotAvailableDAO {
 		} catch(Exception e) {
 			throw new Exception("Failed to get TimesNotAvailable: " + e.getMessage());
 		}
+	}
+
+	public ArrayList<TimeNotAvailable> getAllTimesNotAvailableForScheduleId(String scheduleId) throws Exception {
+		ArrayList<TimeNotAvailable> tna = new ArrayList<>();
+
+		Statement statement = conn.createStatement();
+		String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + scheduleId + "\";";
+
+		ResultSet rs = statement.executeQuery(query);
+
+		if (rs != null) {
+			while (rs.next()) {
+				tna.add(generateTimeNotAvailable(rs));
+			}
+
+			rs.close();
+		}
+
+		statement.close();
+		return tna;
 	}
 	
 	public boolean deleteTimeNotAvailable(String uuid) {
