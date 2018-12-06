@@ -53,8 +53,8 @@ public class TestToggleTimeSlot {
         ToggleTimeSlotPOSTResponse resp = LambdaHandler.gson.fromJson(response.body, ToggleTimeSlotPOSTResponse.class);
         //Assert.assertNotNull(resp.meetingUuid);
         System.out.println(response.body);
-        System.out.println(resp.boo);
-        Assert.assertFalse(resp.boo);
+        System.out.println(resp.status);
+        Assert.assertTrue(resp.status);
         System.out.println("end");
         
 		
