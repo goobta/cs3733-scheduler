@@ -186,7 +186,6 @@ public class Schedule {
 		accum &= s.getEnd_date().equals(this.end_date);
 		accum &= s.getDaily_start_time().equals(this.daily_start_time);
 		accum &= s.getDaily_end_time().equals(this.daily_end_time);
-		accum &= s.getCreated_at().equals(this.created_at);
 		if(s.getDeleted_at() != null && this.deleted_at != null) {
 			accum &= s.getDeleted_at().equals(this.deleted_at);
 		}

@@ -112,7 +112,6 @@ public class Meeting {
 		accum &= m.getSchedule_id().equals(this.schedule_id);
 		accum &= m.getUuid().equals(this.uuid);
 		accum &= m.getStart_time().equals(this.start_time);
-		accum &= m.getCreated_at().equals(this.created_at);
 		if(m.getDeleted_at() != null && this.deleted_at != null) {
 			accum &= m.getDeleted_at().equals(this.deleted_at);
 		}

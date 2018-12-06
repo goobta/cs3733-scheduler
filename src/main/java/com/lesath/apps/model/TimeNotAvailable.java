@@ -94,7 +94,6 @@ public class TimeNotAvailable {
 		accum &= tna.getSchedule_id().equals(this.schedule_id);
 		accum &= tna.getUuid().equals(this.uuid);
 		accum &= tna.getStart_time().equals(this.start_time);
-		accum &= tna.getCreated_at().equals(this.created_at);
 		if(tna.getDeleted_at() != null && this.deleted_at != null) {
 			accum &= tna.getDeleted_at().equals(this.deleted_at);
 		}
