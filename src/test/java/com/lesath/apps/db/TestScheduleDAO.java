@@ -33,18 +33,26 @@ public class TestScheduleDAO {
 		try {
 			uuid = sdao.addSchedule(sched);
 			sched.setUuid(uuid);
-			ArrayList<Schedule> gotSchedules = sdao.getSchedule();
+			Schedule gotSchedule = sdao.getSchedule(uuid);
+			System.out.println(gotSchedule.getCreated_at().toString());
+			System.out.println(sched.getCreated_at().toString());
+			assertTrue(gotSchedule.equals(sched));
+			ArrayList<Schedule> gotSchedules = sdao.getAllSchedules();
 			boolean worked = false;
 			for(Schedule s: gotSchedules) {
 				worked |= s.equals(sched);
 			}
 			assertTrue(worked);
+			
+			assertTrue(sdao.deleteSchedule(uuid));
+			gotSchedule = sdao.getSchedule(uuid);
+			assertTrue(gotSchedule.getCreated_at() != sched.getCreated_at());
 		} catch(Exception e) {
 			System.out.println("ScheduleDAO test failed: " + e.getMessage());
 			assertTrue(false);
 		} finally {
 			try {
-				DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid + "\";").execute();
+				//DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid + "\";").execute();
 			} catch(Exception e) {
 				System.out.println("Failed to reconnect to clean: " + e.getMessage());
 			}

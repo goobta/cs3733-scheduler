@@ -97,6 +97,18 @@ public class MeetingDAO {
 		}
 	}
 	
+	public boolean deleteMeeting(String uuid) {
+		try {
+			PreparedStatement ps;
+            ps = conn.prepareStatement("DELETE FROM Meetings WHERE uuid=\"" + uuid + "\";");
+            ps.execute();
+            return true;
+		}
+		catch(Exception e) {
+			return false;
+		}
+	}
+	
 	Meeting generateMeeting(ResultSet resultSet) throws Exception {
 		try {
 			String schedule_id = resultSet.getString("schedule_id");
