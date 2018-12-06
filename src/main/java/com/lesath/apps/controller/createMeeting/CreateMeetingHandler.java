@@ -21,12 +21,18 @@ public class CreateMeetingHandler extends LambdaHandler {
     
     @Override
     protected boolean handlePUT(APIGatewayRequest request) {
+    	logger.log("starating createMeetingLambda");
     	
     	MeetingInput m = gson.fromJson(request.body, MeetingInput.class);
-    	String scheduleId = request.pathParameters.get("scheduleId");
-    	
+    	logger.log("meeting input");
+    	logger.log(request.body);
+    	//String scheduleId = request.pathParameters.get("scheduleId");
+    	String scheduleId = request.queryStringParameters.get("scheduleId");
+    	logger.log("scheduleId");
+    	logger.log(scheduleId);
     	String uuid = new CreateMeetingRequest(m, scheduleId).execute();
-    	
+    	logger.log("uuid");
+    	logger.log(uuid);
     	CreateMeetingResponse res;
     	if(uuid != null) {
     		res = new CreateMeetingResponse(uuid);

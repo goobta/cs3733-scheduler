@@ -18,12 +18,14 @@ public class CreateMeetingRequest{
 		try {
 			MeetingDAO mDao = new MeetingDAO();
 			String uuid = mDao.addMeeting(meet);
+			System.out.println("hgoifhgbklekighwrelighwre");
 			return uuid;
 		}
 		catch (Exception e ) {
+			System.out.println(e.getMessage());
     		e.printStackTrace();
     		System.out.println("fails to put");
-    		return "";
+    		return e.getMessage();
 		}
 	}
 }

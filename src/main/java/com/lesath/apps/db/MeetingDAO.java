@@ -40,7 +40,7 @@ public class MeetingDAO {
             ps.setString(4, LocalDateTime.now().toString().replaceAll("T", " "));
             if(m.getDeleted_at() != null) {
             	ps.setString(5, m.getDeleted_at().toString().replaceAll("T", " "));
-            }
+            } 
             else {
             	ps.setString(5,  null);
             }
@@ -70,6 +70,7 @@ public class MeetingDAO {
             statement.close();
 			return meeting;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new Exception("Failed to get meeting: " + e.getMessage());
 		}
 	}
