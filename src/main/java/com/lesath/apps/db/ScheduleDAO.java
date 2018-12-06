@@ -111,7 +111,7 @@ public class ScheduleDAO {
 	   try {
 		   PreparedStatement ps;
 		   String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
-		   ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET created_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
+		   ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET deleted_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
 		   ps.execute();
 		   return true;
 	   } catch(Exception e) {
