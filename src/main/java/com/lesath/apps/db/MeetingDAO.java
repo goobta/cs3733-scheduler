@@ -102,8 +102,9 @@ public class MeetingDAO {
 		try {
 			PreparedStatement ps;
             ps = conn.prepareStatement("DELETE FROM Meetings WHERE uuid=\"" + uuid + "\";");
-            ps.execute();
-            return true;
+
+          	ps.execute();
+			return true;
 		}
 		catch(Exception e) {
 			return false;
