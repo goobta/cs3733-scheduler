@@ -65,13 +65,12 @@ public class CreateMeetingHandler extends LambdaHandler {
         String meetingId = request.queryStringParameters.get("meetingId");
 
         MeetingDAO dao = new MeetingDAO();
-        dao.deleteMeeting(meetingId);
-
-        this.response.setStatusCode(204);
-
-        return true;
+        if (dao.deleteMeeting(meetingId)) {
+            this.response.setStatusCode(204);
+            return true;
+        } else {
+            this.response.setStatusCode(404);
+            return false;
+        }
     }
-    
-    
-
 }
