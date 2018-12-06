@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.lesath.apps.controller.APIGatewayRequest;
 import com.lesath.apps.controller.LambdaHandler;
+import com.lesath.apps.controller.createMeeting.CreateMeetingResponse;
 import com.lesath.apps.controller.model.ToggleSlotClass;
 import com.lesath.apps.util.HTTPMethod;
 
@@ -40,8 +41,11 @@ public class ToggleTimeSlotHandler extends LambdaHandler {
     		logger.log("False");
     	}
     	
+    	ToggleTimeSlotResponse res;
     	if(boo) {
+    		res = new ToggleTimeSlotResponse(true);
     		this.response.setStatusCode(204);
+    		this.response.setBody(gson.toJson(res));
     		return true;
     	}
     	else {

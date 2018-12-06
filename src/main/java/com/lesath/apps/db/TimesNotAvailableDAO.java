@@ -37,7 +37,7 @@ public class TimesNotAvailableDAO {
             ps.setString(1, t.getSchedule_id());
             ps.setString(2, uuid);
             ps.setString(3, t.getStart_time().toString());
-            ps.setString(4, t.getCreated_at().toString());
+            ps.setString(4, LocalDateTime.now().toString().replaceAll("T", " "));
             if(t.getDeleted_at() != null) {
             	ps.setString(5, t.getDeleted_at().toString());
             }
