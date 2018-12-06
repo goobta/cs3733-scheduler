@@ -40,11 +40,7 @@ public class TestMeetingDAO {
 			System.out.println("MeetingDAO test failed: " + e.getMessage());
 			assertTrue(false);
 		} finally {
-			try {
-				DatabaseUtil.connect().prepareStatement("DELETE FROM Meetings WHERE uuid=\"" + uuid + "\";").execute();
-			} catch(Exception e) {
-				System.out.println("Failed to reconnect to clean: " + e.getMessage());
-			}
+			mdao.deleteMeeting(uuid);
 		}
 	}
 }

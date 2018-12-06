@@ -40,11 +40,7 @@ public class TestTimesNotAvailableDAO {
 			System.out.println("TimesNotAvailableDAO test failed: " + e.getMessage());
 			assertTrue(false);
 		} finally {
-			try {
-				DatabaseUtil.connect().prepareStatement("DELETE FROM TimesNotAvailable WHERE uuid=\"" + uuid + "\";").execute();
-			} catch(Exception e) {
-				System.out.println("Failed to reconnect to clean: " + e.getMessage());
-			}
+			tnadao.deleteTimeNotAvailable(uuid);
 		}
 	}
 }
