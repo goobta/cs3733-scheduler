@@ -101,9 +101,9 @@ public class MeetingDAO {
 	public boolean deleteMeeting(String uuid) {
 		try {
 			PreparedStatement ps;
-            ps = conn.prepareStatement("DELETE FROM Meetings WHERE uuid=\"" + uuid + "\";");
-
-          	ps.execute();
+			String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
+            ps = conn.prepareStatement("UPDATE Scheduler.Meetings SET deleted_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
+            ps.execute();
 			return true;
 		}
 		catch(Exception e) {
