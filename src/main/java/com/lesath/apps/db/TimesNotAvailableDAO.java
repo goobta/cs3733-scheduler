@@ -95,6 +95,18 @@ public class TimesNotAvailableDAO {
 		}
 	}
 	
+	public boolean deleteTimeNotAvailable(String uuid) {
+		try {
+			PreparedStatement ps;
+            ps = conn.prepareStatement("DELETE FROM TimesNotAvailable WHERE uuid=\"" + uuid + "\";");
+            ps.execute();
+            return true;
+		}
+		catch(Exception e) {
+			return false;
+		}
+	}
+	
 	TimeNotAvailable generateTimeNotAvailable(ResultSet resultSet) throws Exception {
 		try {
 			String schedule_id = resultSet.getString("schedule_id");

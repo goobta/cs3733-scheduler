@@ -19,14 +19,7 @@ public class GetScheduleHandler extends LambdaHandler {
 
     	try {
     		ScheduleDAO dao = new ScheduleDAO();
-    		ArrayList<Schedule> schedules = dao.getSchedule();
-
-    		Schedule schedule = null;
-			for(Schedule x : schedules) {
-				if(x.getUuid().equals(uuid)) {
-					schedule = x;
-				}
-			}
+    		Schedule schedule = dao.getSchedule(uuid);
 
 			if(schedule != null) {
 				this.response.setBody(gson.toJson(schedule));

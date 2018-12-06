@@ -44,7 +44,7 @@ public class ScheduleDAO {
             ps.setString(5, s.getEnd_date().toString());
             ps.setString(6, s.getDaily_start_time().toString());
             ps.setString(7, s.getDaily_end_time().toString());
-            String temp = s.getCreated_at().toString();
+            String temp = LocalDateTime.now().toString();
             temp.replaceAll("T", " ");
             ps.setString(8, temp);
             if(s.getDeleted_at() != null) {
@@ -68,7 +68,7 @@ public class ScheduleDAO {
     * @return an ArrayList<Schedule> containing all the rows in the table schedules
     * @throws Exception when it fails to retrieve a row.
     */
-   public ArrayList<Schedule> getSchedule() throws Exception {
+   public ArrayList<Schedule> getAllSchedules() throws Exception {
         
     	ArrayList<Schedule> rowList = new ArrayList<Schedule>();
     	
@@ -87,9 +87,37 @@ public class ScheduleDAO {
 
         } catch (Exception e) {
         	rowList = null;
-            throw new Exception("Failed to get schedule: " + e.getMessage());
+            throw new Exception("Failed to get all schedules: " + e.getMessage());
         }
     }
+   
+   public Schedule getSchedule(String uuid) {
+	   try {
+		   Schedule schedule;
+		   Statement statement = conn.createStatement();
+		   String query = "SELECT * FROM Schedules WHERE uuid =\"" + uuid + "\";";
+		   ResultSet resultSet = statement.executeQuery(query);
+		   resultSet.next();
+		   schedule = generateSchedule(resultSet);
+		   resultSet.close();
+		   statement.close();
+		   return schedule;
+	   } catch(Exception e) {
+		   return null;
+	   }
+   }
+   
+   public boolean deleteSchedule(String uuid) {
+	   try {
+		   PreparedStatement ps;
+		   String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
+		   ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET created_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
+		   ps.execute();
+		   return true;
+	   } catch(Exception e) {
+		   return false;
+	   }
+   }
     
    /**
     * 
