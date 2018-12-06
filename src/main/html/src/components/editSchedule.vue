@@ -1,6 +1,8 @@
 <template>
 	<div id='app'>
 		<h1>{{ schedule.name }}</h1>
+		<button :disabled='page == 0' class='button' @click='page--'>Previous Page</button>
+		<button :disabled='atEnd' class='button' @click='page++'>Next Page</button>
 		<table class='table is-bordered'>
 			<tbody>
 				<tr>
@@ -23,7 +25,7 @@
 						Friday
 					</th>
 				</tr>
-				<tr v-for='time in times'>
+				<tr v-for='time in currentWeek'>
 					<td>
 						{{ time.time }}
 					</td>
@@ -51,7 +53,32 @@ export default {
 			times: [],
 			uuid: null,
 			dateRange: null,
-			newMeeting: {}
+			newMeeting: {},
+			page: 0
+		}
+	},
+	computed: {
+		currentWeek: function () {
+			let currentWeek = [];
+			for (let i = 0; i < this.times.length; i ++) {
+				currentWeek.push({
+					days: this.times[i].days.slice(this.page*5,this.page*5 + 5),
+					time: this.times[i].time
+				});
+			}
+			if(currentWeek.length > 0){
+				let startDate = new Date(currentWeek[0].days[0].day);
+				let endDate = new Date(currentWeek[0].days[4].day);
+				this.dateRange = '(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + '-' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + ')';
+			}
+			return currentWeek;
+		},
+		atEnd: function () {
+			if(this.times.length != 0){
+				return this.page + 1 == this.times[0].days.length/5;
+			} else {
+				return false;
+			}
 		}
 	},
 	methods: {
@@ -61,6 +88,7 @@ export default {
         	.then(response => this.schedule = response)
         	.catch(error => console.error('Error:', error));
 		},
+
 		parseSchedule () {
 			let startMinutes = (this.schedule.daily_start_time.hour * 60) + this.schedule.daily_start_time.minute
 			let endMinutes = (this.schedule.daily_end_time.hour * 60) + this.schedule.daily_end_time.minute
@@ -68,7 +96,6 @@ export default {
 			let startDate = new Date(this.schedule.startDateTime);
 			let endDate = new Date(this.schedule.endDateTime);
 
-			this.dateRange = '(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + '-' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + ')';
 			for (let i = startMinutes; i < endMinutes; i = i + this.schedule.meetingDuration) {
 				let temp = [];
 				let cursorDate = new Date(this.schedule.startDateTime);
@@ -97,12 +124,16 @@ export default {
 						})
 					} else {
 						temp.push({
+							day: cursorDate.toString(),
 							inBounds: false,
-							available: false
+							available: false,
 						});
 					}
-					//TODO: Weekend handling, if it's friday add 3 instead
-					cursorDate.setDate(cursorDate.getDate() + 1)
+					if (cursorDate.getDay() == 5){
+						cursorDate.setDate(cursorDate.getDate() + 3);
+					} else {
+						cursorDate.setDate(cursorDate.getDate() + 1);
+					}
 				}
 
 				this.times.push({
@@ -111,13 +142,24 @@ export default {
 				});
 			}
 		},
-		toggleTimeslot (timeslot) {
+		async toggleTimeslot (timeslot) {
 			timeslot.available = !timeslot.available;
-			if (timeslot.available) {
-				//If avaiable is true delete unavailability
-			} else {
-				//If avaiable is false create unavailability
+			let startTime = new Date(timeslot.day);
+			startTime.setUTCHours(Math.floor(timeslot.time/60), timeslot.time%60)
+			let body = {
+				startTime,
+				status: timeslot.available
 			}
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/toggleTimeslot?scheduleId=' + this.uuid,{
+				method: 'POST',
+				body,
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .then(response => alert("Secret code: " + response.meetingUuid))
+	        .catch(error => console.error('Error:', error));
 		} 
 	},
 	async created () {

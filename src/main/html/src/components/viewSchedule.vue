@@ -1,6 +1,8 @@
 <template>
 	<div id='app'>
 		<h1>{{ schedule.name }}</h1>
+		<button :disabled='page == 0' class='button' @click='page--'>Previous Page</button>
+		<button :disabled='atEnd' class='button' @click='page++'>Next Page</button>
 		<table class='table is-bordered'>
 			<tbody>
 				<tr>
@@ -51,7 +53,26 @@ export default {
 	computed: {
 		currentWeek: function () {
 			//localhost:8080/#/viewSchedule?uuid=41eea1a1-dcf1-4e77-ae6e-049a2c0650c3
-			return this.times.slice(this.page*5, 5)
+			let currentWeek = [];
+			for (let i = 0; i < this.times.length; i ++) {
+				currentWeek.push({
+					days: this.times[i].days.slice(this.page*5,this.page*5 + 5),
+					time: this.times[i].time
+				});
+			}
+			if(currentWeek.length > 0){
+				let startDate = new Date(currentWeek[0].days[0].day);
+				let endDate = new Date(currentWeek[0].days[4].day);
+				this.dateRange = '(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + '-' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + ')';
+			}
+			return currentWeek;
+		},
+		atEnd: function () {
+			if(this.times.length != 0){
+				return this.page + 1 == this.times[0].days.length/5;
+			} else {
+				return false;
+			}
 		}
 	},
 	methods: {
@@ -68,7 +89,7 @@ export default {
 			let startDate = new Date(this.schedule.startDateTime);
 			let endDate = new Date(this.schedule.endDateTime);
 
-			this.dateRange = '(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + '-' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + ')';
+			//this.dateRange = '(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + '-' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + ')';
 			for (let i = startMinutes; i < endMinutes; i = i + this.schedule.meetingDuration) {
 				let temp = [];
 				let cursorDate = new Date(this.schedule.startDateTime);
@@ -96,6 +117,7 @@ export default {
 						})
 					} else {
 						temp.push({
+							day: cursorDate.toString(),
 							open: false
 						});
 					}
@@ -115,14 +137,14 @@ export default {
 		},
 		async createMeeting (day, time) {
 			this.newMeeting.scheduleId = this.uuid;
-			let participantName = prompt("Enter Name:")
+			let name = prompt("Enter Name:")
 			this.newMeeting = {
-				name: participantName,
+				participantName: name,
 			}
-			this.newMeeting.startTime = new Date(day);
-			this.newMeeting.startTime.setHours(Math.floor(time/60), time%60)
+			this.newMeeting.startDateTime = new Date(day);
+			this.newMeeting.startDateTime.setUTCHours(Math.floor(time/60), time%60)
 			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting?scheduleId=' + this.uuid,{
-				method: PUT,
+				method: 'PUT',
 				body: JSON.stringify(this.newMeeting),
 				headers:{
 		          'Content-Type': 'application/json'

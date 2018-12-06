@@ -126,7 +126,7 @@ export default {
     async putSchedule () {
       this.schedule.startDateTime.setUTCHours(this.schedule.startTime.HH, this.schedule.startTime.mm)
       this.schedule.endDateTime.setUTCHours(this.schedule.endTime.HH, this.schedule.endTime.mm)
-
+      console.log(this.schedule.startDateTime);
       delete this.schedule.startTime;
       delete this.schedule.endTime;
 
