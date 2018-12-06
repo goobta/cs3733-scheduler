@@ -50,13 +50,9 @@ public class ToggleTimeSlotHandler extends LambdaHandler {
     	}
     	else {
     		this.response.setStatusCode(400);
+    		return false;
     	}
     	
-    	
-    	
-    	
-    	
-        return true;
     }
 
     @Override

@@ -25,7 +25,7 @@ public class TestToggleTimeSlot {
 	public void addTimesNotAvailable() throws IOException, ParseException{
 		System.out.println("enters");
 		
-		ToggleSlotClass inp = new ToggleSlotClass(LocalDateTime.now(), true);
+		ToggleSlotClass inp = new ToggleSlotClass(LocalDateTime.now(), false);
 		TestAPIGatewayRequest req = new TestAPIGatewayRequest();
 		req.setBody(LambdaHandler.gson.toJson(inp));
 		req.addQueryParameter("scheduleId", "82e712aa-d528-4f19-a44c-0835f54b91ee");
@@ -35,6 +35,9 @@ public class TestToggleTimeSlot {
 		InputStream input = req.generateRequest(HTTPMethod.POST);
         OutputStream output = new ByteArrayOutputStream();
         Context context = req.generateContext("ToggleTimeSlotPOST");
+        
+        System.out.println("inps");
+        System.out.println(input);
         
         ToggleTimeSlotHandler toggleTimeSlotHandler = new ToggleTimeSlotHandler();
         toggleTimeSlotHandler.handleRequest(input, output, context);
@@ -49,8 +52,9 @@ public class TestToggleTimeSlot {
         }
         ToggleTimeSlotPOSTResponse resp = LambdaHandler.gson.fromJson(response.body, ToggleTimeSlotPOSTResponse.class);
         //Assert.assertNotNull(resp.meetingUuid);
-        System.out.println("Print before");
-        Assert.assertTrue(resp.boo);
+        System.out.println(response.body);
+        System.out.println(resp.boo);
+        Assert.assertFalse(resp.boo);
         System.out.println("end");
         
 		
