@@ -98,7 +98,8 @@ public class TimesNotAvailableDAO {
 	public boolean deleteTimeNotAvailable(String uuid) {
 		try {
 			PreparedStatement ps;
-            ps = conn.prepareStatement("DELETE FROM TimesNotAvailable WHERE uuid=\"" + uuid + "\";");
+			String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
+            ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET deleted_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
             ps.execute();
             return true;
 		}

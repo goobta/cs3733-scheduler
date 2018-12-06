@@ -19,28 +19,28 @@ import com.lesath.apps.model.TimeNotAvailable;
 public class TestTimesNotAvailableDAO {
 
 	@Test
-	public void testTimesNotAvailableDAO() {
+	public void testTimesNotAvailableDAO() throws Exception {
 		TimesNotAvailableDAO tnadao = new TimesNotAvailableDAO();
 		LocalDateTime start = LocalDateTime.of(2018,12,04,8,0,0);
 		LocalDateTime created = LocalDateTime.of(2018,12,04,10,0,0);
 		TimeNotAvailable tna = new TimeNotAvailable("TestTimeNotAvailable",null,start,created,null);
-		String uuid = null;
-		try {
-			uuid = tnadao.addTimeNotAvailable(tna);
-			tna.setUuid(uuid);
-			TimeNotAvailable gotTimeNotAvailable = tnadao.getTimeNotAvailable(uuid);
-			ArrayList<TimeNotAvailable> gotTimesNotAvailable = tnadao.getAllTimesNotAvailable();
-			assertTrue(gotTimeNotAvailable.equals(tna));
-			boolean worked = false;
-			for(TimeNotAvailable t: gotTimesNotAvailable) {
-				worked |= t.equals(tna);
-			}
-			assertTrue(worked);
-		} catch(Exception e) {
-			System.out.println("TimesNotAvailableDAO test failed: " + e.getMessage());
-			assertTrue(false);
-		} finally {
-			tnadao.deleteTimeNotAvailable(uuid);
+		
+		String uuid = tnadao.addTimeNotAvailable(tna);
+		tna.setUuid(uuid);
+		TimeNotAvailable gotTimeNotAvailable = tnadao.getTimeNotAvailable(uuid);
+		assertTrue(gotTimeNotAvailable.equals(tna));
+		
+		ArrayList<TimeNotAvailable> gotTimesNotAvailable = tnadao.getAllTimesNotAvailable();
+		boolean worked = false;
+		for(TimeNotAvailable t: gotTimesNotAvailable) {
+			worked |= t.equals(tna);
 		}
+		assertTrue(worked);
+		
+		assertTrue(tnadao.deleteTimeNotAvailable(uuid));
+		gotTimeNotAvailable = tnadao.getTimeNotAvailable(uuid);
+		assertNotNull(gotTimeNotAvailable.getDeleted_at());
+		
+		DatabaseUtil.connect().prepareStatement("DELETE FROM Scheduler.TimesNotAvailable WHERE uuid=\"" + uuid + "\";").execute();
 	}
 }
