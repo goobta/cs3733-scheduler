@@ -47,5 +47,6 @@ public class TestScheduleDAO {
 		assertNotNull(gotSchedule.getDeleted_at());
 
 		DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid + "\";").execute();
+		//System.out.println(sdao.getOrganizerSchedules("Jimmothy").get(0).getDuration());
 	}
 }

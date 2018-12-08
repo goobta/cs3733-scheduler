@@ -90,8 +90,8 @@ public class ScheduleDAO {
             throw new Exception("Failed to get all schedules: " + e.getMessage());
         }
     }
-   
-   public Schedule getSchedule(String uuid) {
+   	
+	public Schedule getSchedule(String uuid) {
 	   try {
 		   Schedule schedule;
 		   Statement statement = conn.createStatement();
@@ -107,6 +107,23 @@ public class ScheduleDAO {
 	   }
    }
    
+	public ArrayList<Schedule> getOrganizerSchedules(String organizer_uuid) {
+		try {
+			ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM Scheduler.Schedules WHERE organizer_uuid=\"" + organizer_uuid + "\";";
+			ResultSet resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+                schedules.add(generateSchedule(resultSet));
+            }
+            resultSet.close();
+            statement.close();
+        	return schedules;
+		} catch(Exception e) {
+			return null;
+		}
+	}
+	
    public boolean deleteSchedule(String uuid) {
 	   try {
 		   PreparedStatement ps;
