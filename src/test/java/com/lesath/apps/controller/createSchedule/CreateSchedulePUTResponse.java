@@ -1,5 +1,5 @@
 package com.lesath.apps.controller.createSchedule;
 
 public class CreateSchedulePUTResponse {
-    String scheduleUuid;
+    public String scheduleUuid;
 }

@@ -1,13 +1,20 @@
 package com.lesath.apps.model;
 
+import com.google.gson.annotations.SerializedName;
 import java.time.LocalDateTime;
 
 public class Meeting {
 	String schedule_id;
+
+	@SerializedName("id")
 	String uuid;
+
+	@SerializedName("startTime")
 	LocalDateTime start_time;
 	LocalDateTime created_at;
 	LocalDateTime deleted_at;
+
+	@SerializedName("participantName")
 	String participant_name;
 	
 	/**

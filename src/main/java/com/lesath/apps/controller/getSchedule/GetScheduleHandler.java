@@ -22,7 +22,16 @@ public class GetScheduleHandler extends LambdaHandler {
     		Schedule schedule = dao.getSchedule(uuid);
 
 			if(schedule != null) {
-				this.response.setBody(gson.toJson(schedule));
+				GetScheduleGETResponse res = new GetScheduleGETResponse(schedule);
+
+				if (!res.loadMeetingsAndTimesNotAvailable()) {
+					this.response.setStatusCode(500);
+					return false;
+				}
+
+				res.generateRequest();
+
+				this.response.setBody(gson.toJson(res));
 				this.response.setStatusCode(200);
 			} else {
 				this.response.setStatusCode(204);
