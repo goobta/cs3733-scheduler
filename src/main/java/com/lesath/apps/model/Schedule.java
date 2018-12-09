@@ -9,21 +9,21 @@ import java.time.LocalDateTime;
 
 public class Schedule {
 	@SerializedName("id")
-	String uuid;
-	String name;
+	protected String uuid;
+	protected String name;
 	@SerializedName("meetingDuration")
-	int duration;
-	LocalDate start_date;
-	LocalDate end_date;
-	LocalTime daily_start_time;
-	LocalTime daily_end_time;
-	LocalDateTime created_at;
-	LocalDateTime deleted_at;
+	protected int duration;
+	protected LocalDate start_date;
+	protected LocalDate end_date;
+	protected LocalTime daily_start_time;
+	protected LocalTime daily_end_time;
+	protected LocalDateTime created_at;
+	protected LocalDateTime deleted_at;
 	
-	String organizerId;
+	protected String organizerId;
 	
-	LocalDateTime startDateTime;
-	LocalDateTime endDateTime;
+	protected LocalDateTime startDateTime;
+	protected LocalDateTime endDateTime;
 	/**
 	 * @param uuid SHOULD BE NULL
 	 * @param name
