@@ -18,7 +18,7 @@ public class ToggleTimeSlotRequest {
 		this.typeOfToggle = info.isStatus();
 		
 	}
-	
+	 
 	public boolean execute() {
 		
 		try {
@@ -28,6 +28,9 @@ public class ToggleTimeSlotRequest {
 					String uuid = tDao.addTimeNotAvailable(t);
 				}
 				else {
+					
+					boolean boo = tDao.deleteTimeNotAvailable(t.getSchedule_id(), t.getStart_time());
+					return boo;
 					
 				}
 				return true;
