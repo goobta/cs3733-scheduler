@@ -22,8 +22,7 @@ import java.time.LocalDateTime;
 public class TestCreateMeeting {
 
 	@Test
-	public void addMeeting() throws IOException, ParseException{
-		
+	public void addMeeting() throws IOException {
 		MeetingInput inp = new MeetingInput(null, "Rt", LocalDateTime.now());
 		TestAPIGatewayRequest req = new TestAPIGatewayRequest();
 		req.setBody(LambdaHandler.gson.toJson(inp));

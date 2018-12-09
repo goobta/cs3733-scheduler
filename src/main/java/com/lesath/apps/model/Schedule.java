@@ -10,21 +10,24 @@ import java.time.LocalDateTime;
 public class Schedule {
 	@SerializedName("id")
 	protected String uuid;
-	
+
+
 	protected String name;
-	
+
 	@SerializedName("meetingDuration")
 	protected int duration;
-	
-	protected LocalDate start_date;
+
+ 	protected LocalDate start_date;
+
 	protected LocalDate end_date;
 	protected LocalTime daily_start_time;
 	protected LocalTime daily_end_time;
 	protected LocalDateTime created_at;
 	protected LocalDateTime deleted_at;
+
 	
 	protected String organizerId;
-	
+
 	protected LocalDateTime startDateTime;
 	protected LocalDateTime endDateTime;
 	/**
@@ -55,7 +58,15 @@ public class Schedule {
 		this.endDateTime = LocalDateTime.of(end_date, daily_end_time);
 		
 	}
-	
+
+	public LocalDateTime getStartDateTime() {
+		return this.startDateTime;
+	}
+
+	public LocalDateTime getEndDateTime() {
+		return this.endDateTime;
+	}
+
 	/**
 	 * @return the uuid
 	 */

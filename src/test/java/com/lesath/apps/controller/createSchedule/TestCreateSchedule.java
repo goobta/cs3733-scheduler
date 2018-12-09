@@ -30,7 +30,7 @@ public class TestCreateSchedule {
 
         InputStream input = req.generateRequest(HTTPMethod.PUT);
         OutputStream output = new ByteArrayOutputStream();
-        Context context = req.generateContext("CreateSchedulePUT") ;
+        Context context = req.generateContext("CreateSchedulePUT");
 
         CreateScheduleHandler createScheduleHandler = new CreateScheduleHandler();
         createScheduleHandler.handleRequest(input, output, context);
