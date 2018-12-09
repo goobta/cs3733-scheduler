@@ -113,11 +113,11 @@ public class TimesNotAvailableDAO {
 		return tna;
 	}
 	
-	public boolean deleteTimeNotAvailable(String uuid) {
+	public boolean deleteTimeNotAvailable(String schedule_id, LocalDateTime startTime) {
 		try {
 			PreparedStatement ps;
 			String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
-            ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET deleted_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
+            ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET deleted_at=\"" + currentTime + "\" WHERE schedule_id=\"" + schedule_id + "\" AND start_time=\"" + startTime + "\";");
             ps.execute();
             return true;
 		}
