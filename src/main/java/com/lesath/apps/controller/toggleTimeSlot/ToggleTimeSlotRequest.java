@@ -29,6 +29,9 @@ public class ToggleTimeSlotRequest {
 				}
 				else {
 					
+					boolean boo = tDao.deleteTimeNotAvailable(t.getSchedule_id(), t.getStart_time());
+					return boo;
+					
 				}
 				return true;
 		}
