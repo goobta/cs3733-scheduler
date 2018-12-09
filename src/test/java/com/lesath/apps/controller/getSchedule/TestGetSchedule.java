@@ -38,7 +38,7 @@ public class TestGetSchedule {
 		LocalTime t1 = LocalTime.of(8, 0);
 		LocalTime t2 = LocalTime.of(11, 0);
 		LocalDateTime created = LocalDateTime.of(2018, 6, 7, 7, 0);
-		Schedule sched = new Schedule(null, "TestSchedule", 30, d1, d2, t1, t2, created, null);
+		Schedule sched = new Schedule(null, "TestSchedule", 30, d1, d2, t1, t2, created, null, "388b1cac-f3fd-42d0-9c58-92c72904f4b1");
 
 		String uuid = sDAO.addSchedule(sched);
 
