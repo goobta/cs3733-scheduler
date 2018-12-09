@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 public class Schedule {
 	@SerializedName("id")
 	protected String uuid;
+	
 	protected String name;
+	
 	@SerializedName("meetingDuration")
 	protected int duration;
+	
 	protected LocalDate start_date;
 	protected LocalDate end_date;
 	protected LocalTime daily_start_time;
