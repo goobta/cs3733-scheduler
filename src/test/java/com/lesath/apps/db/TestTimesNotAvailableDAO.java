@@ -40,7 +40,7 @@ public class TestTimesNotAvailableDAO {
 		}
 		assertTrue(worked);
 		
-		assertTrue(tnadao.deleteTimeNotAvailable(uuid));
+		assertTrue(tnadao.deleteTimeNotAvailable(tna.getSchedule_id(), tna.getStart_time()));
 		gotTimeNotAvailable = tnadao.getTimeNotAvailable(uuid);
 		assertNotNull(gotTimeNotAvailable.getDeleted_at());
 		
