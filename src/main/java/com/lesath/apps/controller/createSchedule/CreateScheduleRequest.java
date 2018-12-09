@@ -18,8 +18,9 @@ public class CreateScheduleRequest {
 				sc.getEndDayTime().toLocalDate(),
 				sc.getStartDayTime().toLocalTime(),
 				sc.getEndDayTime().toLocalTime(),
-				LocalDateTime.now(),
-				null);
+				null,
+				null,
+				sc.getOrganizerId());
 	}
 	
 	public String execute() {

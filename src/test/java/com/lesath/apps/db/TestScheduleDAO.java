@@ -28,7 +28,7 @@ public class TestScheduleDAO {
 		LocalTime t1 = LocalTime.of(8, 0);
 		LocalTime t2 = LocalTime.of(11, 0);
 		LocalDateTime created = LocalDateTime.of(2018, 6, 7, 7, 0);
-		Schedule sched = new Schedule(null, "TestSchedule", 30, d1, d2, t1, t2, created, null);
+		Schedule sched = new Schedule(null, "TestSchedule", 30, d1, d2, t1, t2, created, null, "9aa99334-4eb9-4113-916b-4397537c9453");
 		
 		String uuid = sdao.addSchedule(sched);
 		sched.setUuid(uuid);

@@ -20,7 +20,7 @@ public class Schedule {
 	LocalDateTime created_at;
 	LocalDateTime deleted_at;
 	
-	String organizerId = "01e113d8-3cc3-4fc1-90a2-81f65cfcda16";
+	String organizerId;
 	
 	LocalDateTime startDateTime;
 	LocalDateTime endDateTime;
@@ -36,8 +36,7 @@ public class Schedule {
 	 * @param deleted_at
 	 */
 	public Schedule(String uuid, String name, int duration, LocalDate start_date, LocalDate end_date,
-			LocalTime daily_start_time, LocalTime daily_end_time, LocalDateTime created_at, LocalDateTime deleted_at) {
-		super();
+			LocalTime daily_start_time, LocalTime daily_end_time, LocalDateTime created_at, LocalDateTime deleted_at, String organizerId) {
 		this.uuid = uuid;
 		this.name = name;
 		this.duration = duration;
@@ -47,6 +46,7 @@ public class Schedule {
 		this.daily_end_time = daily_end_time;
 		this.created_at = created_at;
 		this.deleted_at = deleted_at;
+		this.organizerId = organizerId;
 		
 		this.startDateTime = LocalDateTime.of(start_date, daily_start_time);
 		this.endDateTime = LocalDateTime.of(end_date, daily_end_time);

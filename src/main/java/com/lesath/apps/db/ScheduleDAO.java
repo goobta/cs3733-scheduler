@@ -35,8 +35,8 @@ public class ScheduleDAO {
         try {
             PreparedStatement ps;
             ps = conn.prepareStatement("INSERT INTO Schedules (uuid, name, duration, start_date, "
-            		+ "end_date, daily_start_time, daily_end_time, created_at, deleted_at) "
-            		+ "values(?,?,?,?,?,?,?,?,?);");
+            		+ "end_date, daily_start_time, daily_end_time, created_at, deleted_at, organizer_uuid) "
+            		+ "values(?,?,?,?,?,?,?,?,?,?);");
             ps.setString(1, uuid);
             ps.setString(2, s.getName());
             ps.setInt(3, s.getDuration());
@@ -55,6 +55,7 @@ public class ScheduleDAO {
             else {
             	ps.setString(9, null);
             }
+            ps.setString(10, s.getOrganizerId());
             ps.execute();
             return uuid;
 
@@ -159,6 +160,7 @@ public class ScheduleDAO {
         else {
         	deleted_at = null;
         }
-        return new Schedule(uuid, name, duration, start_date, end_date, daily_start_time, daily_end_time, created_at, deleted_at) ;
+        String organizerId = resultSet.getString("organizer_uuid");
+        return new Schedule(uuid, name, duration, start_date, end_date, daily_start_time, daily_end_time, created_at, deleted_at, organizerId) ;
     }
 }

@@ -21,7 +21,8 @@ public class TestCreateSchedule {
                 "CreateScheduleHandlerTest",
                 60,
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                "9aa99334-4eb9-4113-916b-4397537c9453"
         );
 
         TestAPIGatewayRequest req = new TestAPIGatewayRequest();

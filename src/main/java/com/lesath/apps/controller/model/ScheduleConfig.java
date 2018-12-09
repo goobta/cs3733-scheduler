@@ -7,12 +7,14 @@ public class ScheduleConfig {
 	int meetingLength;
 	LocalDateTime startDateTime;
 	LocalDateTime endDateTime;
-	
-	public ScheduleConfig(String name, int meetingLength, LocalDateTime startDayTime, LocalDateTime endDayTime) {
+	String organizerId;
+
+	public ScheduleConfig(String name, int meetingLength, LocalDateTime startDayTime, LocalDateTime endDayTime, String organizerId) {
 		this.name = name;
 		this.meetingLength = meetingLength;
 		this.startDateTime = startDayTime;
 		this.endDateTime = endDayTime;
+		this.organizerId = organizerId;
 	}
 
 	/**
@@ -69,5 +71,19 @@ public class ScheduleConfig {
 	 */
 	public void setEndDayTime(LocalDateTime endDayTime) {
 		this.endDateTime = endDayTime;
+	}
+	
+	/**
+	 * @return the organizerId
+	 */
+	public String getOrganizerId() {
+		return organizerId;
+	}
+
+	/**
+	 * @param organizerId the organizerId to set
+	 */
+	public void setOrganizerId(String organizerId) {
+		this.organizerId = organizerId;
 	}
 }
