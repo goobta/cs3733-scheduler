@@ -118,8 +118,14 @@ public class TimesNotAvailableDAO {
 			PreparedStatement ps;
 			String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
             ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET deleted_at=\"" + currentTime + "\" WHERE schedule_id=\"" + schedule_id + "\" AND start_time=\"" + startTime + "\";");
-            ps.execute();
-            return true;
+            int num = ps.executeUpdate();
+            
+            if (num == 1) {
+            	return true;
+            }
+            else {
+            	return false;
+            }
 		}
 		catch(Exception e) {
 			return false;

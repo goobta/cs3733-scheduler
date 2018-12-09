@@ -49,7 +49,9 @@ public class ToggleTimeSlotHandler extends LambdaHandler {
     		return true;
     	}
     	else {
+    		res = new ToggleTimeSlotResponse(false);
     		this.response.setStatusCode(400);
+    		this.response.setBody(gson.toJson(res));
     		return false;
     	}
     	

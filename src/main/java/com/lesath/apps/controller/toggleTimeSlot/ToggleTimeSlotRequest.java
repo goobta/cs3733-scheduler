@@ -18,7 +18,7 @@ public class ToggleTimeSlotRequest {
 		this.typeOfToggle = info.isStatus();
 		
 	}
-	
+	 
 	public boolean execute() {
 		
 		try {
