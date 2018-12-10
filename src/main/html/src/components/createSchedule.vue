@@ -91,6 +91,7 @@
       <button @click='redirect()' class='button' v-if='url != null'>View Schedule</button>
     </div>
     <p v-if='url != null'>Participant URL:</p><a :href='url'>{{ url }}</a>
+    <p v-if='url != null'>Secret Code:{{ uuid }}</p>
   </div>
 </template>
 
@@ -124,9 +125,9 @@ export default {
   },
   methods: {
     async putSchedule () {
-      this.schedule.startDateTime.setUTCHours(this.schedule.startTime.HH, this.schedule.startTime.mm)
-      this.schedule.endDateTime.setUTCHours(this.schedule.endTime.HH, this.schedule.endTime.mm)
-      console.log(this.schedule.startDateTime);
+      this.schedule.startDateTime.setHours(this.schedule.startTime.HH, this.schedule.startTime.mm)
+      this.schedule.endDateTime.setHours(this.schedule.endTime.HH, this.schedule.endTime.mm)
+
       delete this.schedule.startTime;
       delete this.schedule.endTime;
 

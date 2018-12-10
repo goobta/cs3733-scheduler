@@ -29,8 +29,12 @@
 					<td>
 						{{ time.time }}
 					</td>
-					<td v-for='timeSlot in time.days' v-bind:class="{ unavailable: !timeSlot.open }">
-						<button v-if='timeSlot.open' class='button' @click='createMeeting(timeSlot.day, timeSlot.time)'>Free</button>
+					<td v-for='timeSlot in time.days' v-bind:class="{ unavailable: !timeSlot.inBounds }">
+						<button v-if='timeSlot.available' class='button' @click='createMeeting(timeSlot.day, timeSlot.time)'>Free</button>
+						<div v-if='timeSlot.inBounds && timeSlot.name'>
+							<p class='has-text-centered'>{{ timeSlot.name }}</p>
+							<button @click='cancelMeeting(timeSlot)'>cancel</button>
+						</div>
 					</td>
 				</tr>
 			</tbody>
@@ -73,7 +77,22 @@ export default {
 			} else {
 				return false;
 			}
+		},
+		meetings: function () {
+			let temp = {};
+			for(let i = 0; i < this.schedule.meetings.length; i++){
+				temp[this.schedule.meetings[i].startTime] = this.schedule.meetings[i].participantName;
+			}
+			return temp;
+		},
+		notAviable: function () {
+			let temp = {};
+			for(let i = 0; i < this.schedule.timesNotAvailable.length; i++){
+				temp[this.schedule.timesNotAvailable[i]] = true;
+			}
+			return temp;
 		}
+
 	},
 	methods: {
 		async getSchedule () {
@@ -83,17 +102,20 @@ export default {
         	.catch(error => console.error('Error:', error));
 		},
 		parseSchedule () {
-			let startMinutes = (this.schedule.daily_start_time.hour * 60) + this.schedule.daily_start_time.minute
-			let endMinutes = (this.schedule.daily_end_time.hour * 60) + this.schedule.daily_end_time.minute
-
 			let startDate = new Date(this.schedule.startDateTime);
 			let endDate = new Date(this.schedule.endDateTime);
 
-			//this.dateRange = '(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + '-' + (endDate.getMonth() + 1) + '/' + endDate.getDate() + ')';
+			console.log(startDate);
+			console.log(endDate);
+
+			let startMinutes = (startDate.getHours() * 60) + startDate.getMinutes();
+			let endMinutes = (endDate.getHours() * 60) + endDate.getMinutes();
+
 			for (let i = startMinutes; i < endMinutes; i = i + this.schedule.meetingDuration) {
 				let temp = [];
 				let cursorDate = new Date(this.schedule.startDateTime);
 				let lastDate = new Date(this.schedule.endDateTime);
+				console.log(cursorDate);
 				cursorDate.setHours(0,0);
 				lastDate.setHours(23,59);
 
@@ -109,16 +131,36 @@ export default {
 				    lastDate.setHours(24 * (5-day));
 				}
 				while (cursorDate <= lastDate) {
+					let dateString = (cursorDate.getYear()+1900) + '-' + ('0' + (cursorDate.getMonth()+1)).slice(-2) + '-' + String("0" + cursorDate.getDate()).slice(-2) + 'T' + String('0' + Math.floor(i/60)).slice(-2) + ':' + (i%60 == 0 ? '00': (i%60 == 5 ? '05' : i%60)) + ':' + String('0' + cursorDate.getSeconds()).slice(-2) + '.000' + 'Z';
 					if (cursorDate >= new Date(startDate).setHours(0,0,0) && cursorDate <= new Date(endDate.setHours(23,59,59))) {
-						temp.push({
-							day: cursorDate.toString(),
-							time: i,
-							open: true
-						})
+						if(this.meetings[dateString]){
+							temp.push({
+								day: cursorDate.toString(),
+								time: i,
+								inBounds: true,
+								available: false,
+								name: this.meetings[dateString]
+							})
+						} else if (this.notAviable[dateString]){
+							temp.push({
+								day: cursorDate.toString(),
+								time: i,
+								inBounds: false,
+								available: false
+							})
+						} else {
+							temp.push({
+								day: cursorDate.toString(),
+								time: i,
+								inBounds: true,
+								available: true
+							})	
+						}
 					} else {
 						temp.push({
 							day: cursorDate.toString(),
-							open: false
+							inBounds: false,
+							available: false
 						});
 					}
 
@@ -153,7 +195,23 @@ export default {
 			.then(res => res.json())
 	        .then(response => alert("Secret code: " + response.meetingUuid))
 	        .catch(error => console.error('Error:', error));
+	        location.reload();
+		},
+		async cancelMeeting (timeSlot) {
+			let code = prompt("Meeting secret code")
+			if (code == timeSlot.meetingId) {
+				alert('correct');
+			}
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting?scheduleId=' + this.uuid + "&meetingId=" + code, {
+		        method: 'DELETE',
+		        headers:{
+		          'Content-Type': 'application/json'
+		        }
+		      })
+		        .catch(error => console.error('Error:', error));
+		    location.reload();
 		}
+
 	},
 	async created () {
 		this.uuid = this.$route.query.uuid;
