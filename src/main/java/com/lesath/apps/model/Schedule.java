@@ -2,20 +2,33 @@ package com.lesath.apps.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
 
 public class Schedule {
-	String uuid;
-	String name;
-	int duration;
-	LocalDate start_date;
-	LocalDate end_date;
-	LocalTime daily_start_time;
-	LocalTime daily_end_time;
-	LocalDateTime created_at;
-	LocalDateTime deleted_at;
+	@SerializedName("id")
+	protected String uuid;
+
+	protected String name;
+
+	@SerializedName("meetingDuration")
+	protected int duration;
+
+ 	protected LocalDate start_date;
+	protected LocalDate end_date;
+	protected LocalTime daily_start_time;
+	protected LocalTime daily_end_time;
+	protected LocalDateTime created_at;
+	protected LocalDateTime deleted_at;
+
+	protected String organizerId = "01e113d8-3cc3-4fc1-90a2-81f65cfcda16";
+
+	protected LocalDateTime startDateTime;
+	protected LocalDateTime endDateTime;
 	/**
-	 * @param uuid SHOLD BE NULL
+	 * @param uuid SHOULD BE NULL
 	 * @param name
 	 * @param duration
 	 * @param start_date
@@ -37,7 +50,20 @@ public class Schedule {
 		this.daily_end_time = daily_end_time;
 		this.created_at = created_at;
 		this.deleted_at = deleted_at;
+		
+		this.startDateTime = LocalDateTime.of(start_date, daily_start_time);
+		this.endDateTime = LocalDateTime.of(end_date, daily_end_time);
+		
 	}
+
+	public LocalDateTime getStartDateTime() {
+		return this.startDateTime;
+	}
+
+	public LocalDateTime getEndDateTime() {
+		return this.endDateTime;
+	}
+
 	/**
 	 * @return the uuid
 	 */
@@ -145,5 +171,44 @@ public class Schedule {
 	 */
 	public void setDeleted_at(LocalDateTime deleted_at) {
 		this.deleted_at = deleted_at;
+	}
+	/**
+	 * @return the organizerId
+	 */
+	public String getOrganizerId() {
+		return organizerId;
+	}
+	/**
+	 * @param organizerId the organizerId to set
+	 */
+	public void setOrganizerId(String organizerId) {
+		this.organizerId = organizerId;
+	}
+	
+	public boolean equals(Schedule s) {
+		if(s == null) {
+			return false;
+		}
+		boolean accum = true;
+		accum &= s.getUuid().equals(this.uuid);
+		accum &= s.getName().equals(this.name);
+		accum &= s.getDuration() == this.duration;
+		accum &= s.getStart_date().equals(this.start_date);
+		accum &= s.getEnd_date().equals(this.end_date);
+		accum &= s.getDaily_start_time().equals(this.daily_start_time);
+		accum &= s.getDaily_end_time().equals(this.daily_end_time);
+		if(s.getDeleted_at() != null && this.deleted_at != null) {
+			accum &= s.getDeleted_at().equals(this.deleted_at);
+		}
+		else if (s.getDeleted_at() != null || this.deleted_at != null){
+			accum = false;
+		}
+		if(s.getOrganizerId() != null && this.organizerId != null) {
+			accum &= s.getOrganizerId().equals(this.organizerId);
+		}
+		else if (s.getOrganizerId() != null || this.organizerId != null){
+			accum = false;
+		}
+		return accum;
 	}
 }

@@ -86,4 +86,20 @@ public class TimeNotAvailable {
 		this.deleted_at = deleted_at;
 	}
 	
+	public boolean equals(TimeNotAvailable tna) {
+		if(tna == null) {
+			return false;
+		}
+		boolean accum = true;
+		accum &= tna.getSchedule_id().equals(this.schedule_id);
+		accum &= tna.getUuid().equals(this.uuid);
+		accum &= tna.getStart_time().equals(this.start_time);
+		if(tna.getDeleted_at() != null && this.deleted_at != null) {
+			accum &= tna.getDeleted_at().equals(this.deleted_at);
+		}
+		else if (tna.getDeleted_at() != null || this.deleted_at != null){
+			accum = false;
+		}
+		return accum;
+	}
 }
