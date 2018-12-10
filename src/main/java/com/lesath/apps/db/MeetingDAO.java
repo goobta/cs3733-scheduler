@@ -102,7 +102,7 @@ public class MeetingDAO {
 		ArrayList<Meeting> meetings = new ArrayList<>();
 
 		Statement statement = conn.createStatement();
-		String query = "SELECT * FROM Scheduler.Meetings WHERE schedule_id=\"" + scheduleId + "\";";
+		String query = "SELECT * FROM Scheduler.Meetings WHERE schedule_id=\"" + scheduleId + "\" and deleted_at IS null;";
 		ResultSet resultSet = statement.executeQuery(query);
 
 		if(resultSet != null) {
