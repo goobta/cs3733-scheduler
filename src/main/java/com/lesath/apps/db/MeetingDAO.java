@@ -122,7 +122,11 @@ public class MeetingDAO {
 			PreparedStatement ps;
 			String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
             ps = conn.prepareStatement("UPDATE Scheduler.Meetings SET deleted_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
-            ps.execute();
+            int numAffected = ps.executeUpdate();
+            //System.out.println("num affectd:" + numAffected );
+            if(numAffected == 0) {
+            	return false;
+            }
 			return true;
 		}
 		catch(Exception e) {
