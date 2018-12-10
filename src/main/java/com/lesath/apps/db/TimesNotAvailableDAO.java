@@ -97,7 +97,7 @@ public class TimesNotAvailableDAO {
 		ArrayList<TimeNotAvailable> tna = new ArrayList<>();
 
 		Statement statement = conn.createStatement();
-		String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + scheduleId + "\";";
+		String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + scheduleId + "\" and deleted_at is null;";
 
 		ResultSet rs = statement.executeQuery(query);
 
@@ -117,7 +117,7 @@ public class TimesNotAvailableDAO {
 		try {
 			PreparedStatement ps;
 			String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
-            ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET deleted_at=\"" + currentTime + "\" WHERE schedule_id=\"" + schedule_id + "\" AND start_time=\"" + startTime + "\";");
+            ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET deleted_at=\"" + currentTime + "\" WHERE schedule_id=\"" + schedule_id + "\" AND start_time=\"" + startTime.toString().replaceAll("T", " ") + "\";");
             int num = ps.executeUpdate();
             
             if (num == 1) {
