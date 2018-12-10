@@ -45,7 +45,6 @@ public class TestScheduleDAO {
 		
 		assertTrue(sdao.extendSchedule(uuid, -1));
 		assertTrue(sdao.getSchedule(uuid).getStart_date().plusDays(1).equals(sched.getStart_date()));
-		
 		assertTrue(sdao.extendSchedule(uuid, 1));
 		assertTrue(sdao.getSchedule(uuid).getEnd_date().minusDays(1).equals(sched.getEnd_date()));
 		
