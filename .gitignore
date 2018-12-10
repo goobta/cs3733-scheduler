@@ -36,3 +36,14 @@ src/main/html/node_modules/
 .project
 .settings/
 .bin/
+
+# IntelliJ MR
+.idea/
+.attach_*
+
+# NodeJS Stuff
+**/package-lock.json
+**/yarn.lock
+
+# VIM
+*.swp

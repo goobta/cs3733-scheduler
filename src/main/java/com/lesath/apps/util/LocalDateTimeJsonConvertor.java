@@ -12,9 +12,9 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class LocalDateTimeJsonConvertor implements JsonSerializer<LocalDateTime>,JsonDeserializer<LocalDateTime> {
+public class LocalDateTimeJsonConvertor implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
     
-	private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	
 	public JsonElement serialize(LocalDateTime localDateTime, Type type, JsonSerializationContext jsonSerializationContext) {
         return new JsonPrimitive(localDateTime.format(dateTimeFormatter));
