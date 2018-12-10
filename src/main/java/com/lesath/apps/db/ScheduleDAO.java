@@ -74,7 +74,7 @@ public class ScheduleDAO {
     	
     	try {
     		Statement statement = conn.createStatement();
-            String query = "SELECT * FROM Schedules";
+            String query = "SELECT * FROM Schedules WHERE deleted_at IS null;";
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {

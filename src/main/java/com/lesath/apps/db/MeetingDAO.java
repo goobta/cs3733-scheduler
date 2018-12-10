@@ -79,7 +79,7 @@ public class MeetingDAO {
 		ArrayList<Meeting> meetings = new ArrayList<Meeting>();
 		try {
 			Statement statement = conn.createStatement();
-			String query = "SELECT * FROM Scheduler.Meetings";
+			String query = "SELECT * FROM Scheduler.Meetings WHERE deleted_at IS null;";
 			ResultSet resultSet = statement.executeQuery(query);
 			
 			if(resultSet != null) {
