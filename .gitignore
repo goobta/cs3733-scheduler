@@ -44,3 +44,6 @@ src/main/html/node_modules/
 # NodeJS Stuff
 **/package-lock.json
 **/yarn.lock
+
+# VIM
+*.swp
