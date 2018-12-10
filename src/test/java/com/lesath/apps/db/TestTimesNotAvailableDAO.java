@@ -37,6 +37,7 @@ public class TestTimesNotAvailableDAO {
 		boolean worked = false;
 		for(TimeNotAvailable t: gotTimesNotAvailable) {
 			worked |= t.equals(tna);
+			assertNull(t.getDeleted_at());
 		}
 		assertTrue(worked);
 		

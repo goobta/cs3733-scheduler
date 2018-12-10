@@ -39,6 +39,7 @@ public class TestScheduleDAO {
 		boolean worked = false;
 		for(Schedule s: gotSchedules) {
 			worked |= s.equals(sched);
+			assertNull(s.getDeleted_at());
 		}
 		assertTrue(worked);
 		

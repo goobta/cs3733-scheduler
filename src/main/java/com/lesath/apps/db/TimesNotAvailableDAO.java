@@ -74,7 +74,7 @@ public class TimesNotAvailableDAO {
 		ArrayList<TimeNotAvailable> tnas = new ArrayList<TimeNotAvailable>();
 		try {
 			Statement statement = conn.createStatement();
-			String query = "SELECT * FROM Scheduler.TimesNotAvailable";
+			String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE deleted_at IS null;";
 			ResultSet resultSet = statement.executeQuery(query);
 			
 			if(resultSet != null) {

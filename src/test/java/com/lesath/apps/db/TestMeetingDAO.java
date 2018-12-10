@@ -36,6 +36,7 @@ public class TestMeetingDAO {
 		boolean worked = false;
 		for(Meeting m: gotMeetings) {
 			worked |= m.equals(meeting);
+			assertNull(m.getDeleted_at());
 		}
 		assertTrue(worked);
 
