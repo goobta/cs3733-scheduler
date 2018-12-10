@@ -13,7 +13,7 @@
 	      </div>
 	    </div>
 
-		<div v-if='creating && !confirm' class='field is-horizontal'>
+		<div v-if='creating && !confirmAccount' class='field is-horizontal'>
 	      <div class='field-label is-normal'>
 	        <label class="label">Email</label>
 	      </div>
@@ -26,7 +26,7 @@
 	      </div>
 	    </div>
 
-	    <div v-if='!confirm' class='field is-horizontal'>
+	    <div v-if='!confirmAccount' class='field is-horizontal'>
 	      <div class='field-label is-normal'>
 	        <label class="label">Password</label>
 	      </div>
@@ -39,7 +39,7 @@
 	      </div>
 	    </div>
 
-	    <div class='field is-horizontal' v-if='confirm'>
+	    <div class='field is-horizontal' v-if='confirmAccount'>
 	      <div class='field-label is-normal'>
 	        <label class="label">Confimation code</label>
 	      </div>
@@ -52,11 +52,11 @@
 	      </div>
 	    </div>
 
-	    <button v-if='!creating && !confirm' class='button' @click='login()'>Login</button>
-	    <button v-if='!creating && !confirm' class='button' @click='toggleCreating()'>Sign up</button>
-	    <button v-if='creating && !confirm' class='button' @click='signup()'>Create Account</button>
-	   	<button v-if='creating && !confirm' class='button' @click='toggleCreating()'>Cancel</button>
-	   	<button v-if='confirm' class=button @click='confirm()'>Confirm</button>
+	    <button v-if='!creating && !confirmAccount' class='button' @click='login()'>Login</button>
+	    <button v-if='!creating && !confirmAccount' class='button' @click='toggleCreating()'>Sign up</button>
+	    <button v-if='creating && !confirmAccount' class='button' @click='signup()'>Create Account</button>
+	   	<button v-if='creating && !confirmAccount' class='button' @click='toggleCreating()'>Cancel</button>
+	   	<button v-if='confirmAccount' class=button @click='confirm()'>confirmAccount</button>
 	</div>
 </template>
 <script>
@@ -73,8 +73,9 @@ export default {
 				password: 'Password123'
 			},
 			creating: false,
-			confirm: false,
-			error: null
+			confirmAccount: false,
+			error: null,
+			organizerObject: null
 		}
 	},
 	methods: {
@@ -83,16 +84,16 @@ export default {
 		},
 		async signup () {
 			let res = await cognitoAuth.signup(this.user.name, this.user.email, this.user.password);
-			this.confirm = true;
+			this.confirmAccount = true;
 		},
 		async confirm () {
-			await cognitoAuth.confirm(this.user.name, this.user.code);
+			await cognitoAuth.confirmAccount(this.user.name, this.user.code);
 			this.creating = false;
-			this.confirm = false;
+			this.confirmAccount = false;
 		},
 		async login () {
 			let res = await cognitoAuth.login(this.user.name, this.user.password);
-			console.log(res);
+			this.$router.push({name:'createSchedule', params: {organizerObject: res}});
 		}
 	}
 }
