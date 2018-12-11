@@ -35,7 +35,7 @@ public class TestCancelOrgMeeting {
 		OutputStream output = new ByteArrayOutputStream();
 		Context context = request.generateContext("CreateScheduleDELETE");
 
-		CreateMeetingHandler handler = new CreateMeetingHandler();
+		CancelOrgMeetingHandler handler = new CancelOrgMeetingHandler();
 		handler.handleRequest(input, output, context);
 
 		LambdaResponse respose = LambdaHandler.gson.fromJson(output.toString(), LambdaResponse.class);
