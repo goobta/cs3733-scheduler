@@ -23,12 +23,12 @@ public class TestScheduleDAO {
 	@Test
 	public void testScheduleDAO() throws Exception{
 		ScheduleDAO sdao = new ScheduleDAO();
-		LocalDate d1 = LocalDate.of(2018,12,04);
-		LocalDate d2 = LocalDate.of(2018,12,05);
-		LocalTime t1 = LocalTime.of(8, 0);
-		LocalTime t2 = LocalTime.of(11, 0);
-		LocalDateTime created = LocalDateTime.of(2018, 6, 7, 7, 0);
-		Schedule sched = new Schedule(null, "TestSchedule", 30, d1, d2, t1, t2, created, null);
+		LocalDate start_date = LocalDate.of(2018,12,04);
+		LocalDate end_date = LocalDate.of(2018,12,05);
+		LocalTime daily_start_time = LocalTime.of(8, 0);
+		LocalTime daily_end_time = LocalTime.of(11, 0);
+		LocalDateTime created_at = LocalDateTime.of(2018, 6, 7, 7, 0);
+		Schedule sched = new Schedule(null, "TestSchedule", 30, start_date, end_date, daily_start_time, daily_end_time, created_at, null);
 		
 		String uuid = sdao.addSchedule(sched);
 		sched.setUuid(uuid);
@@ -49,8 +49,8 @@ public class TestScheduleDAO {
 		assertTrue(sdao.getSchedule(uuid).getEnd_date().minusDays(1).equals(sched.getEnd_date()));
 		
 		assertTrue(sdao.deleteSchedule(uuid));
-		gotSchedule = sdao.getSchedule(uuid);
-		assertNotNull(gotSchedule.getDeleted_at());
+		assertNull(sdao.getSchedule(uuid));
+		assertNull(sdao.getSchedule("NotA_UUID"));
 
 		DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid + "\";").execute();
 	}
