@@ -118,6 +118,30 @@ public class ScheduleDAO {
 		   return false;
 	   }
    }
+   
+   public boolean extendSchedule(String schedule_id, int delta) throws Exception {
+	   try {
+		   if(delta < 0) {
+			   LocalDate start_date = getSchedule(schedule_id).getStart_date();
+			   String startString = start_date.minusDays(-delta).toString().replaceAll("T", " ");
+			   PreparedStatement ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET start_date=\"" + startString + "\" WHERE uuid=\"" + schedule_id + "\";");
+			   int numAffected = ps.executeUpdate();
+			   return(numAffected == 1);
+		   }
+		   else if(delta > 0){
+			   LocalDate end_date = getSchedule(schedule_id).getEnd_date();
+			   String endString = end_date.plusDays(delta).toString().replaceAll("T", " ");
+			   PreparedStatement ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET end_date=\"" + endString + "\" WHERE uuid=\"" + schedule_id + "\";");
+			   int numAffected = ps.executeUpdate();
+			   return(numAffected == 1);
+		   }
+		   else {
+			   return false;
+		   }
+	   } catch(Exception e) {
+		   throw new Exception("Failed to extend schedule: " + e.getMessage());
+	   }
+   }
     
    /**
     * 
