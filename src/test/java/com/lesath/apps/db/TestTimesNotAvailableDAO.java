@@ -5,7 +5,6 @@ package com.lesath.apps.db;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -13,7 +12,6 @@ import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.lesath.apps.model.Meeting;
 import com.lesath.apps.model.TimeNotAvailable;
 
 /**
@@ -53,6 +51,13 @@ public class TestTimesNotAvailableDAO {
 		assertFalse(tnadao.deleteTimeNotAvailable("BadScheduleId",tna.getStart_time()));
 		assertNull(tnadao.getTimeNotAvailable(uuid));
 		assertNull(tnadao.getAllTimesNotAvailableForScheduleId(tna.getSchedule_id()));
+		
+		TimeNotAvailable newTna = tna;
+		newTna.setDeleted_at(null);
+		assertTrue(tnadao.addTimeNotAvailable(newTna).equals(tna.getUuid()));
+		TimeNotAvailable newGotTna = tnadao.getTimeNotAvailable(newTna.getUuid());
+		//assertFalse(gotTimeNotAvailable.getCreated_at().equals(newGotTna.getCreated_at()));
+		assertNull(newGotTna.getDeleted_at());
 		
 		DatabaseUtil.connect().prepareStatement("DELETE FROM Scheduler.TimesNotAvailable WHERE uuid=\"" + uuid + "\";").execute();
 	}
