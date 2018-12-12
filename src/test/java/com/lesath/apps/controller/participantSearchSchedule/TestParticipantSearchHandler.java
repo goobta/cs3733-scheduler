@@ -106,4 +106,118 @@ public class TestParticipantSearchHandler {
 
         executeRequest(query, 3);
     }
+
+    @Test
+    public void testStartTimeLate() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setStartTime(LocalDateTime.of(2018, 12, 04, 11, 0, 0));
+
+        executeRequest(query, 2);
+    }
+
+    @Test
+    public void testStartTimeEarlier() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setStartTime(LocalDateTime.of(2018, 12, 04, 10, 0, 0));
+
+        executeRequest(query, 3);
+    }
+
+    @Test
+    public void testEndTime() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
+
+        executeRequest(query, 2);
+    }
+
+    @Test
+    public void testSameDayOfWeek() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setDayOfTheWeek(2);
+
+        executeRequest(query, 3);
+    }
+
+    @Test
+    public void testDifferentDayOfWeek() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setDayOfTheWeek(3);
+
+        executeRequest(query, 0);
+    }
+
+    @Test
+    public void testSameMonth() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setMonth(12);
+
+        executeRequest(query, 3);
+    }
+
+    @Test
+    public void testDifferentMonth() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setMonth(11);
+
+        executeRequest(query, 0);
+    }
+
+    @Test
+    public void testSameYear() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setYear(2018);
+
+        executeRequest(query, 3);
+    }
+
+    @Test
+    public void testDifferentYear() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setYear(2017);
+
+        executeRequest(query, 0);
+    }
+
+    @Test
+    public void testSameDay() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setDay(4);
+
+        executeRequest(query, 3);
+    }
+
+    @Test
+    public void testDifferentDay() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setDay(5);
+
+        executeRequest(query, 0);
+    }
+
+    @Test
+    public void testSameCombined() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setYear(2018)
+                .setMonth(12)
+                .setDay(4)
+                .setDayOfTheWeek(2)
+                .setStartTime(LocalDateTime.of(2018, 12, 04, 11, 0, 0))
+                .setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
+
+        executeRequest(query, 1);
+    }
+
+    @Test
+    public void testCombinedOneFailure() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setYear(2018)
+                .setMonth(12)
+                .setDay(4)
+                .setDayOfTheWeek(3)
+                .setStartTime(LocalDateTime.of(2018, 12, 04, 11, 0, 0))
+                .setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
+
+        executeRequest(query, 0);
+    }
 }
