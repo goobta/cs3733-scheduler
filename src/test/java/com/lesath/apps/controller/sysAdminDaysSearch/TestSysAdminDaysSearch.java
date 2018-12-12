@@ -1,7 +1,6 @@
 package com.lesath.apps.controller.sysAdminDaysSearch;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.fasterxml.jackson.databind.type.ArrayType;
 import com.google.gson.reflect.TypeToken;
 import com.lesath.apps.controller.LambdaHandler;
 import com.lesath.apps.controller.LambdaResponse;
@@ -10,7 +9,6 @@ import com.lesath.apps.controller.sysAdminDaySearch.SysAdminDaySearchHandler;
 import com.lesath.apps.db.ScheduleDAO;
 import com.lesath.apps.model.Schedule;
 import com.lesath.apps.util.HTTPMethod;
-import org.apache.http.protocol.HTTP;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +24,8 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertFalse;
 
 public class TestSysAdminDaysSearch {
+    ScheduleDAO sdao;
+
     Schedule sched1;
     Schedule sched2;
     Schedule sched3;
@@ -36,7 +36,7 @@ public class TestSysAdminDaysSearch {
 
     @Before
     public void addSchedules() throws Exception {
-        ScheduleDAO sdao = new ScheduleDAO();
+        sdao = new ScheduleDAO();
 
         LocalDate start_date = LocalDate.of(2018,12,04);
         LocalDate end_date = LocalDate.of(2018,12,05);
@@ -79,7 +79,7 @@ public class TestSysAdminDaysSearch {
 
         SysAdminDaySearchHandler handler = new SysAdminDaySearchHandler();
         handler.handleRequest(input, output, context);;
-    
+
         LambdaResponse response = LambdaHandler.gson.fromJson(output.toString(), LambdaResponse.class);
         ArrayList<Schedule> schedules = LambdaHandler.gson.fromJson(response.body, new TypeToken<ArrayList<Schedule>>(){}.getType());
 
@@ -91,5 +91,20 @@ public class TestSysAdminDaysSearch {
         }
 
         Assert.assertEquals(3, got);
+    }
+
+    @Test
+    public void testNDaysOldSchedulesDELETE() throws Exception {
+        TestAPIGatewayRequest req = new TestAPIGatewayRequest();
+        req.addQueryParameter("days", "2");
+
+        InputStream input = req.generateRequest(HTTPMethod.DELETE);
+        OutputStream output = new ByteArrayOutputStream();
+        Context context = req.generateContext("DELETE N Days Old");
+
+        SysAdminDaySearchHandler handler = new SysAdminDaySearchHandler();
+        handler.handleRequest(input, output, context);
+
+        Assert.assertNull(sdao.getSchedulesDaysOld(2));
     }
 }
