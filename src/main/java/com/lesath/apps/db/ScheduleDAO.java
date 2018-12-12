@@ -165,6 +165,22 @@ public class ScheduleDAO {
 		   throw new Exception("Failed to get schedules days old: " + e.getMessage());
 	   }
    }
+   
+   public ArrayList<Schedule> getSchedulesHoursOld(int hours) throws Exception{
+	   try {
+		   ArrayList<Schedule> allSchedules = getAllSchedules();
+		   ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		   LocalDateTime cutoff = LocalDateTime.now().minusHours(hours);
+		   for(Schedule s: allSchedules) {
+			   if(s.getCreated_at().isAfter(cutoff)) {
+				   schedules.add(s);
+			   }
+		   }
+		   return schedules;
+	   } catch(Exception e) {
+		   throw new Exception("Failed to get schedules hours old: " + e.getMessage());
+	   }
+   }
     
    /**
     * 

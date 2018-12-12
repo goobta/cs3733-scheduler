@@ -50,8 +50,16 @@ public class TestScheduleDAO {
 		sched2.setUuid(uuid2);
 		sched3.setUuid(uuid3);
 		ArrayList<Schedule> scheds = sdao.getSchedulesDaysOld(2);
-		
 		int got = 0;
+		assertFalse(scheds.isEmpty());
+		for(Schedule s: scheds) {
+			if(s.equals(sched) || s.equals(sched2) || s.equals(sched3)) {
+				got++;
+			}
+		}
+		assertTrue(got==3);
+		scheds = sdao.getSchedulesHoursOld(2);
+		got = 0;
 		assertFalse(scheds.isEmpty());
 		for(Schedule s: scheds) {
 			if(s.equals(sched) || s.equals(sched2) || s.equals(sched3)) {
