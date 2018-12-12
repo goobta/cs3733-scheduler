@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.lesath.apps.model.Meeting;
 import com.lesath.apps.model.TimeNotAvailable;
 
 /**
@@ -27,23 +28,38 @@ public class TimesNotAvailableDAO {
 	}
 	
 	public String addTimeNotAvailable(TimeNotAvailable t) throws Exception {
-		String uuid = UUID.randomUUID().toString();
 		try {
-			PreparedStatement ps;
-            ps = conn.prepareStatement("INSERT INTO TimesNotAvailable (schedule_id, uuid, start_time, "
-            		+ "created_at, deleted_at) values(?,?,?,?,?);");
-            ps.setString(1, t.getSchedule_id());
-            ps.setString(2, uuid);
-            ps.setString(3, t.getStart_time().toString());
-            ps.setString(4, LocalDateTime.now().toString().replaceAll("T", " "));
-            if(t.getDeleted_at() != null) {
-            	ps.setString(5, t.getDeleted_at().toString());
-            }
-            else {
-            	ps.setString(5,  null);
-            }
-            ps.execute();
-            return uuid;
+			String startString = t.getStart_time().toString().replaceAll("T", " ");
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + t.getSchedule_id() + "\" AND start_time=\"" + startString + "\";";
+			ResultSet resultSet = statement.executeQuery(query);
+			if(resultSet.first()) {
+				TimeNotAvailable oldTna = generateTimeNotAvailable(resultSet); 
+				PreparedStatement ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET deleted_at=null WHERE uuid=\"" + oldTna.getUuid() + "\";");
+				ps.executeUpdate();
+				String currentTimeString = LocalDateTime.now().toString().replaceAll("T", " ");
+				ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET created_at=\"" + currentTimeString + "\" WHERE uuid=\"" + oldTna.getUuid() + "\";");
+				ps.executeUpdate();
+				return oldTna.getUuid();
+			}
+			else {
+				String uuid = UUID.randomUUID().toString();
+				PreparedStatement ps;
+		        ps = conn.prepareStatement("INSERT INTO TimesNotAvailable (schedule_id, uuid, start_time, "
+		        		+ "created_at, deleted_at) values(?,?,?,?,?);");
+		        ps.setString(1, t.getSchedule_id());
+		        ps.setString(2, uuid);
+		        ps.setString(3, t.getStart_time().toString());
+		        ps.setString(4, LocalDateTime.now().toString().replaceAll("T", " "));
+		        if(t.getDeleted_at() != null) {
+		        	ps.setString(5, t.getDeleted_at().toString());
+		        }
+		        else {
+		        	ps.setString(5,  null);
+		        }
+		        ps.execute();
+		        return uuid;
+			}
 		} catch(Exception e) {
 			throw new Exception("Could not add TimeNotAvailable: " + e.getMessage());
 		}
