@@ -48,7 +48,7 @@ public class TestCreateSchedule {
         
 
         TestAPIGatewayRequest req = new TestAPIGatewayRequest();
-        req.addQueryParameter("scheduleId", "fdfa4b58-b7d8-40ab-b192-c62492a8a565");
+        req.addQueryParameter("scheduleId", "ggfa4b58-b7d8-40ab-b192-c62492a8a565");
 
         InputStream input = req.generateRequest(HTTPMethod.DELETE);
         OutputStream output = new ByteArrayOutputStream();
