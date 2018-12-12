@@ -6,6 +6,7 @@ import com.lesath.apps.controller.LambdaHandler;
 import com.lesath.apps.controller.model.ScheduleQuery;
 import com.lesath.apps.util.HTTPMethod;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ParticipantSearchScheduleHandler extends LambdaHandler {
@@ -42,7 +43,16 @@ public class ParticipantSearchScheduleHandler extends LambdaHandler {
         }
 
         ParticipantSearchScheduleRequest req = new ParticipantSearchScheduleRequest(query, scheduleId);
+        try {
+            ArrayList<LocalDateTime> freeTimes = req.execute();
 
+            response.setStatusCode(200);
+            response.setBody(gson.toJson(freeTimes));
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            response.setStatusCode(500);
+        }
 
 
         return false;
