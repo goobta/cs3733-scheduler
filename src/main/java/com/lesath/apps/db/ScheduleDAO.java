@@ -160,6 +160,50 @@ public class ScheduleDAO {
 		   throw new Exception("Failed to extend schedule: " + e.getMessage());
 	   }
    }
+   
+   public ArrayList<Schedule> getSchedulesDaysOld(int days) throws Exception{
+	   try {
+		   ArrayList<Schedule> allSchedules = getAllSchedules();
+		   ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		   LocalDateTime cutoff = LocalDateTime.now().minusDays(days);
+		   for(Schedule s: allSchedules) {
+			   if(s.getCreated_at().isAfter(cutoff)) {
+				   schedules.add(s);
+			   }
+		   }
+		   return schedules;
+	   } catch(Exception e) {
+		   throw new Exception("Failed to get schedules days old: " + e.getMessage());
+	   }
+   }
+   
+   public ArrayList<Schedule> getSchedulesHoursOld(int hours) throws Exception{
+	   try {
+		   ArrayList<Schedule> allSchedules = getAllSchedules();
+		   ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		   LocalDateTime cutoff = LocalDateTime.now().minusHours(hours);
+		   for(Schedule s: allSchedules) {
+			   if(s.getCreated_at().isAfter(cutoff)) {
+				   schedules.add(s);
+			   }
+		   }
+		   return schedules;
+	   } catch(Exception e) {
+		   throw new Exception("Failed to get schedules hours old: " + e.getMessage());
+	   }
+   }
+   
+   public boolean deleteSchedules(ArrayList<String> uuids) throws Exception {
+	   try {
+		   boolean accum = true;
+		   for(String uuid: uuids) {
+			   accum &= deleteSchedule(uuid);
+		   }
+		   return accum;
+	   } catch(Exception e) {
+		   throw new Exception("Failed to delete schedules: " + e.getMessage());
+	   }
+   }
     
    /**
     * 
