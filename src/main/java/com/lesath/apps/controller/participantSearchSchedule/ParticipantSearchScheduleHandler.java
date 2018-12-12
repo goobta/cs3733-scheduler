@@ -24,7 +24,7 @@ public class ParticipantSearchScheduleHandler extends LambdaHandler {
 
     @Override
     protected boolean handlePOST(APIGatewayRequest request) {
-        
+
 
         return false;
     }
