@@ -17,12 +17,14 @@ public class ExtendScheduleRequest {
 		
 		ScheduleDAO sDao = new ScheduleDAO();
 		try {
-			
+			boolean boo = sDao.extendSchedule(scheduleId, ex.getDeltaDays());
+			return boo;
 			
 		}catch (Exception e) {
-			
+			System.out.println(e.getMessage());
+			return false;
 		}
 		
-		return false;
+		
 	}
 }
