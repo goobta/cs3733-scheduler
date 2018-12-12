@@ -3,14 +3,14 @@ package com.lesath.apps.controller.model;
 import java.time.LocalDateTime;
 
 public class ScheduleQuery {
-    int month;
-    int day;
-    int year;
-    int dayOfTheWeek;
+    Integer month;
+    Integer day;
+    Integer year;
+    Integer dayOfTheWeek;
     LocalDateTime startTime;
     LocalDateTime endTime;
 
-    public int getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
@@ -18,7 +18,7 @@ public class ScheduleQuery {
         this.month = month;
     }
 
-    public int getDay() {
+    public Integer getDay() {
         return day;
     }
 
@@ -26,7 +26,7 @@ public class ScheduleQuery {
         this.day = day;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
@@ -34,7 +34,7 @@ public class ScheduleQuery {
         this.year = year;
     }
 
-    public int getDayOfTheWeek() {
+    public Integer getDayOfTheWeek() {
         return dayOfTheWeek;
     }
 
