@@ -149,6 +149,22 @@ public class ScheduleDAO {
 		   throw new Exception("Failed to extend schedule: " + e.getMessage());
 	   }
    }
+   
+   public ArrayList<Schedule> getSchedulesDaysOld(int days) throws Exception{
+	   try {
+		   ArrayList<Schedule> allSchedules = getAllSchedules();
+		   ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		   LocalDateTime cutoff = LocalDateTime.now().minusDays(days);
+		   for(Schedule s: allSchedules) {
+			   if(s.getCreated_at().isAfter(cutoff)) {
+				   schedules.add(s);
+			   }
+		   }
+		   return schedules;
+	   } catch(Exception e) {
+		   throw new Exception("Failed to get schedules days old: " + e.getMessage());
+	   }
+   }
     
    /**
     * 

@@ -43,15 +43,35 @@ public class TestScheduleDAO {
 		}
 		assertTrue(worked);
 		
+		Schedule sched2 = new Schedule(null, "TestSchedule2", 30, start_date, end_date, daily_start_time, daily_end_time, created_at, null);
+		Schedule sched3 = new Schedule(null, "TestSchedule3", 30, start_date, end_date, daily_start_time, daily_end_time, created_at, null);
+		String uuid2 = sdao.addSchedule(sched2);
+		String uuid3 = sdao.addSchedule(sched3);
+		sched2.setUuid(uuid2);
+		sched3.setUuid(uuid3);
+		ArrayList<Schedule> scheds = sdao.getSchedulesDaysOld(2);
+		
+		int got = 0;
+		assertFalse(scheds.isEmpty());
+		for(Schedule s: scheds) {
+			if(s.equals(sched) || s.equals(sched2) || s.equals(sched3)) {
+				got++;
+			}
+		}
+		assertTrue(got==3);
+		
 		assertTrue(sdao.extendSchedule(uuid, -1));
 		assertTrue(sdao.getSchedule(uuid).getStart_date().plusDays(1).equals(sched.getStart_date()));
 		assertTrue(sdao.extendSchedule(uuid, 1));
 		assertTrue(sdao.getSchedule(uuid).getEnd_date().minusDays(1).equals(sched.getEnd_date()));
 		
+		
 		assertTrue(sdao.deleteSchedule(uuid));
 		assertNull(sdao.getSchedule(uuid));
 		assertNull(sdao.getSchedule("NotA_UUID"));
-
+		
 		DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid + "\";").execute();
+		DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid2 + "\";").execute();
+		DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid3 + "\";").execute();
 	}
 }
