@@ -14,13 +14,30 @@ public class MultiToggleTimeSlotHandler extends LambdaHandler {
 
         this.handledMethods = new ArrayList<>();
         handledMethods.add(HTTPMethod.DELETE);
+        handledMethods.add(HTTPMethod.PUT);
 
         return true;
     }
 
     @Override
     protected boolean handlePUT(APIGatewayRequest request) {
-        return false;
+        logger.log("Starting PUT method");
+
+        try {
+            MultiToggleTimeSlotRequest req = gson.fromJson(request.body, MultiToggleTimeSlotRequest.class);
+            req.availability = true;
+
+            MultiToggleTimeSlotResponse response = new MultiToggleTimeSlotResponse(req.execute());
+
+            this.response.setStatusCode(200);
+            this.response.setBody(gson.toJson(response));
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+
+            this.response.setStatusCode(400);
+        }
+
+        return true;
     }
 
     @Override
@@ -39,6 +56,8 @@ public class MultiToggleTimeSlotHandler extends LambdaHandler {
 
         try {
             MultiToggleTimeSlotRequest req = gson.fromJson(request.body, MultiToggleTimeSlotRequest.class);
+            req.availability = false;
+
             MultiToggleTimeSlotResponse response = new MultiToggleTimeSlotResponse(req.execute());
 
             this.response.setStatusCode(200);
