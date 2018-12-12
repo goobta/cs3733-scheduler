@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.lesath.apps.controller.sysAdminDaySearch.SysAdminDaySearchHandler;
 import com.lesath.apps.model.Schedule;
 
 
@@ -166,6 +167,11 @@ public class ScheduleDAO {
 		   ArrayList<Schedule> allSchedules = getAllSchedules();
 		   ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 		   LocalDateTime cutoff = LocalDateTime.now().minusDays(days);
+
+		   if(allSchedules == null) {
+		       return null;
+           }
+
 		   for(Schedule s: allSchedules) {
 			   if(s.getCreated_at().isAfter(cutoff)) {
 				   schedules.add(s);
@@ -173,6 +179,7 @@ public class ScheduleDAO {
 		   }
 		   return schedules;
 	   } catch(Exception e) {
+	   		e.printStackTrace();
 		   throw new Exception("Failed to get schedules days old: " + e.getMessage());
 	   }
    }
