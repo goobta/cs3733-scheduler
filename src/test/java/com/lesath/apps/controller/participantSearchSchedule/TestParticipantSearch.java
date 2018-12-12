@@ -107,7 +107,100 @@ public class TestParticipantSearch {
         ScheduleQuery query = new ScheduleQuery();
         query.setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
         ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
-        System.out.println(request.execute());
         Assert.assertEquals(2, request.execute().size());
+    }
+
+    @Test
+    public void testSameDayOfWeek() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setDayOfTheWeek(2);
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(3, request.execute().size());
+    }
+
+    @Test
+    public void testDifferentDayOfWeek() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setDayOfTheWeek(3);
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(0, request.execute().size());
+    }
+
+    @Test
+    public void testSameMonth() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setMonth(12);
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(3, request.execute().size());
+    }
+
+    @Test
+    public void testDifferentMonth() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setMonth(11);
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(0, request.execute().size());
+    }
+
+    @Test
+    public void testSameYear() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setYear(2018);
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(3, request.execute().size());
+    }
+
+    @Test
+    public void testDifferentYear() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setYear(2017);
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(0, request.execute().size());
+    }
+
+    @Test
+    public void testSameDay() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setDay(4);
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(3, request.execute().size());
+    }
+
+    @Test
+    public void testDifferentDay() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setDay(5);
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(0, request.execute().size());
+    }
+
+    @Test
+    public void testSameCombined() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setYear(2018)
+                .setMonth(12)
+                .setDay(4)
+                .setDayOfTheWeek(2)
+                .setStartTime(LocalDateTime.of(2018, 12, 04, 11, 0, 0))
+                .setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
+
+
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(1, request.execute().size());
+    }
+
+    @Test
+    public void testCombinedOneFailure() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setYear(2018)
+                .setMonth(12)
+                .setDay(4)
+                .setDayOfTheWeek(3)
+                .setStartTime(LocalDateTime.of(2018, 12, 04, 11, 0, 0))
+                .setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
+
+
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(0, request.execute().size());
     }
 }
