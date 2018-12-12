@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.lesath.apps.model.Meeting;
 import com.lesath.apps.model.TimeNotAvailable;
 
 /**
