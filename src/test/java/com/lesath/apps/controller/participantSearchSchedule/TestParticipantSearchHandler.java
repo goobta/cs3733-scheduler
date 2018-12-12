@@ -82,10 +82,7 @@ public class TestParticipantSearchHandler {
         Assert.assertEquals(1, tnadao.getAllTimesNotAvailableForScheduleId(scheduleId).size());
     }
 
-    @Test
-    public void testNoBlocks() throws IOException {
-        ScheduleQuery query = new ScheduleQuery();
-
+    private void executeRequest(ScheduleQuery query, int expected) throws IOException {
         TestAPIGatewayRequest req = new TestAPIGatewayRequest();
         req.addQueryParameter("scheduleId", scheduleId);
         req.setBody(LambdaHandler.gson.toJson(query));
@@ -100,6 +97,13 @@ public class TestParticipantSearchHandler {
         LambdaResponse response = LambdaHandler.gson.fromJson(output.toString(), LambdaResponse.class);
         ArrayList<LocalDateTime> results = LambdaHandler.gson.fromJson(response.body, ArrayList.class);
 
-        Assert.assertEquals(3, results.size());
+        Assert.assertEquals(expected, results.size());
+    }
+
+    @Test
+    public void testNoBlocks() throws IOException {
+        ScheduleQuery query = new ScheduleQuery();
+
+        executeRequest(query, 3);
     }
 }
