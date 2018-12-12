@@ -56,6 +56,7 @@ public class ParticipantSearchScheduleRequest {
             valid &= !(timesNotAvailable.contains(instant) || meetingTimes.contains(instant));
             valid &= this.query.getMonth() == null || instant.getMonth().getValue() == this.query.getMonth();
             valid &= this.query.getDay() == null || instant.getDayOfMonth() == this.query.getDay();
+            valid &= this.query.getYear() == null || instant.getYear() == this.query.getYear();
             valid &= this.query.getDayOfTheWeek() == null || instant.getDayOfWeek().getValue() == this.query.getDayOfTheWeek();
             valid &= this.query.getEndTime() == null || instant.withSecond(0).isBefore(LocalDateTime.of(instant.toLocalDate(), this.query.getEndTime().toLocalTime()));
             valid &= this.query.getStartTime() == null || instant.withSecond(59).isAfter(LocalDateTime.of(instant.toLocalDate(), this.query.getStartTime().toLocalTime().withSecond(0)));
