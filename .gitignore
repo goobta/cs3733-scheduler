@@ -47,3 +47,5 @@ src/main/html/node_modules/
 
 # VIM
 *.swp
+
+scheduler.iml

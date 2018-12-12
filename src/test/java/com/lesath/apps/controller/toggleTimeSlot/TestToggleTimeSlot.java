@@ -16,8 +16,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.lesath.apps.controller.LambdaHandler;
 import com.lesath.apps.controller.LambdaResponse;
 import com.lesath.apps.controller.TestAPIGatewayRequest;
-import com.lesath.apps.controller.createMeeting.CreateMeetingHandler;
-import com.lesath.apps.controller.createMeeting.CreateMeetingPUTResponse;
 import com.lesath.apps.controller.model.ToggleSlotClass;
 import com.lesath.apps.util.HTTPMethod;
 
@@ -33,7 +31,7 @@ public class TestToggleTimeSlot {
 		TestAPIGatewayRequest req = new TestAPIGatewayRequest();
 		req.setBody(LambdaHandler.gson.toJson(inp));
 		req.addQueryParameter("scheduleId", "82e712aa-d528-4f19-a44c-0835f54b91ee");
-		
+
 	
 		
 		InputStream input = req.generateRequest(HTTPMethod.POST);
