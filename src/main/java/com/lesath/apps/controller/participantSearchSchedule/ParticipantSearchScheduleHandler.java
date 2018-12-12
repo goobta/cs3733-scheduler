@@ -52,10 +52,10 @@ public class ParticipantSearchScheduleHandler extends LambdaHandler {
             e.printStackTrace();
 
             response.setStatusCode(500);
+            return false;
         }
 
-
-        return false;
+        return true;
     }
 
     @Override
