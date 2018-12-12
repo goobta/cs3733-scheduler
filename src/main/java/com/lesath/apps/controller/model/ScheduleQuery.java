@@ -14,47 +14,59 @@ public class ScheduleQuery {
         return month;
     }
 
-    public void setMonth(int month) {
+    public ScheduleQuery setMonth(int month) {
         this.month = month;
+
+        return this;
     }
 
     public Integer getDay() {
         return day;
     }
 
-    public void setDay(int day) {
+    public ScheduleQuery setDay(int day) {
         this.day = day;
+
+        return this;
     }
 
     public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public ScheduleQuery setYear(int year) {
         this.year = year;
+
+        return this;
     }
 
     public Integer getDayOfTheWeek() {
         return dayOfTheWeek;
     }
 
-    public void setDayOfTheWeek(int dayOfTheWeek) {
+    public ScheduleQuery setDayOfTheWeek(int dayOfTheWeek) {
         this.dayOfTheWeek = dayOfTheWeek;
+
+        return this;
     }
 
     public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public ScheduleQuery setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
+
+        return this;
     }
 
     public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public ScheduleQuery setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+
+        return this;
     }
 }
