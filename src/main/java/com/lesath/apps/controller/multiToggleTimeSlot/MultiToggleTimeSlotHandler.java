@@ -25,7 +25,7 @@ public class MultiToggleTimeSlotHandler extends LambdaHandler {
 
         try {
             MultiToggleTimeSlotRequest req = gson.fromJson(request.body, MultiToggleTimeSlotRequest.class);
-            req.availability = true;
+            req.availability = false;
 
             MultiToggleTimeSlotResponse response = new MultiToggleTimeSlotResponse(req.execute());
 
@@ -56,7 +56,7 @@ public class MultiToggleTimeSlotHandler extends LambdaHandler {
 
         try {
             MultiToggleTimeSlotRequest req = gson.fromJson(request.body, MultiToggleTimeSlotRequest.class);
-            req.availability = false;
+            req.availability = true;
 
             MultiToggleTimeSlotResponse response = new MultiToggleTimeSlotResponse(req.execute());
 

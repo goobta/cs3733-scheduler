@@ -30,6 +30,7 @@ public class MultiToggleTimeSlotRequest {
                     response.put(dateTime, success);
                 }
             } catch (Exception e) {
+                System.out.println("DAB");
                 e.printStackTrace();
 
                 response.put(dateTime, false);
