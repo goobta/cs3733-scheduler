@@ -181,6 +181,18 @@ public class ScheduleDAO {
 		   throw new Exception("Failed to get schedules hours old: " + e.getMessage());
 	   }
    }
+   
+   public boolean deleteSchedules(ArrayList<String> uuids) throws Exception {
+	   try {
+		   boolean accum = true;
+		   for(String uuid: uuids) {
+			   accum &= deleteSchedule(uuid);
+		   }
+		   return accum;
+	   } catch(Exception e) {
+		   throw new Exception("Failed to delete schedules: " + e.getMessage());
+	   }
+   }
     
    /**
     * 

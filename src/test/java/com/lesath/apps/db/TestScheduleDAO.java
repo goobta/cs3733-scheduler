@@ -77,6 +77,12 @@ public class TestScheduleDAO {
 		assertTrue(sdao.deleteSchedule(uuid));
 		assertNull(sdao.getSchedule(uuid));
 		assertNull(sdao.getSchedule("NotA_UUID"));
+		ArrayList<String> uuids = new ArrayList<String>();
+		uuids.add(uuid2);
+		uuids.add(uuid3);
+		assertTrue(sdao.deleteSchedules(uuids));
+		assertNull(sdao.getSchedule(uuid2));
+		assertNull(sdao.getSchedule(uuid3));
 		
 		DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid + "\";").execute();
 		DatabaseUtil.connect().prepareStatement("DELETE FROM Schedules WHERE uuid=\"" + uuid2 + "\";").execute();
