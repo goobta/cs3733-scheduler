@@ -130,6 +130,9 @@ public class ScheduleDAO {
 	   try {
 		   if(delta < 0) {
 			   LocalDate start_date = getSchedule(schedule_id).getStart_date();
+			   if(start_date.getDayOfWeek().name() == "MONDAY") {
+				   delta = delta - 3;
+			   }
 			   String startString = start_date.minusDays(-delta).toString().replaceAll("T", " ");
 			   PreparedStatement ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET start_date=\"" + startString + "\" WHERE uuid=\"" + schedule_id + "\";");
 			   int numAffected = ps.executeUpdate();
@@ -137,6 +140,9 @@ public class ScheduleDAO {
 		   }
 		   else if(delta > 0){
 			   LocalDate end_date = getSchedule(schedule_id).getEnd_date();
+			   if(end_date.getDayOfWeek().name() == "FRIDAY") {
+				   delta = delta + 3;
+			   }
 			   String endString = end_date.plusDays(delta).toString().replaceAll("T", " ");
 			   PreparedStatement ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET end_date=\"" + endString + "\" WHERE uuid=\"" + schedule_id + "\";");
 			   int numAffected = ps.executeUpdate();
