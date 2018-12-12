@@ -105,9 +105,6 @@ export default {
 			let startDate = new Date(this.schedule.startDateTime);
 			let endDate = new Date(this.schedule.endDateTime);
 
-			console.log(startDate);
-			console.log(endDate);
-
 			let startMinutes = (startDate.getHours() * 60) + startDate.getMinutes();
 			let endMinutes = (endDate.getHours() * 60) + endDate.getMinutes();
 
