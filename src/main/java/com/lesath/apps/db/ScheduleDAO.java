@@ -117,10 +117,13 @@ public class ScheduleDAO {
    
    public boolean deleteSchedule(String uuid) throws Exception {
 	   try {
+		   System.out.println("In schedule Dao");
 		   PreparedStatement ps;
 		   String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
 		   ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET deleted_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
 		   int numAffected = ps.executeUpdate();
+		   System.out.print("num: ");
+		   System.out.println(numAffected);
 		   return(numAffected == 1);
 	   } catch(Exception e) {
 		   throw new Exception("Failed to delete schedule: " + e.getMessage());

@@ -3,6 +3,7 @@ package com.lesath.apps.controller.createSchedule;
 import com.lesath.apps.controller.APIGatewayRequest;
 import com.lesath.apps.controller.LambdaHandler;
 import com.lesath.apps.controller.model.ScheduleConfig;
+import com.lesath.apps.db.ScheduleDAO;
 import com.lesath.apps.util.HTTPMethod;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class CreateScheduleHandler extends LambdaHandler {
 
         this.handledMethods = new ArrayList<>();
         handledMethods.add(HTTPMethod.PUT);
+        handledMethods.add(HTTPMethod.DELETE);
 
         return true;
     }
@@ -52,6 +54,25 @@ public class CreateScheduleHandler extends LambdaHandler {
 
     @Override
     protected boolean handleDELETE(APIGatewayRequest request) {
-        return false;
+        
+    	String scheduleId = request.queryStringParameters.get("scheduleId");
+    	System.out.println("scheduleID");
+    	System.out.println(scheduleId);
+    	ScheduleDAO sDao = new ScheduleDAO();
+    	try {
+    			boolean boo = sDao.deleteSchedule(scheduleId);
+    			if(!boo) {
+    				this.response.setStatusCode(404);
+    				return false;
+    			}
+    			this.response.setStatusCode(204);
+                return true;
+    			
+    	} catch(Exception e) {
+    		 this.response.setStatusCode(404);
+             return false;
+    	}
+    	
+    	
     }
 }
