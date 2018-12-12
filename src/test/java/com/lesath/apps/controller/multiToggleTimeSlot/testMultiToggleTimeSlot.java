@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class testToggleTimeSlot {
+public class testMultiToggleTimeSlot {
 
     String scheduleId = "69696969-6969-6969-6969-420696969696";
 
