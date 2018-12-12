@@ -41,17 +41,7 @@ public class TestParticipantSearch {
                 null);
 
         scheduleId = sDAO.addSchedule(schedule);
-    }
 
-    @Test
-    public void testTimeSlotCreation() {
-        ParticipantSearchScheduleRequest req = new ParticipantSearchScheduleRequest(null, scheduleId);
-
-        Assert.assertEquals(5, req.generateAllAvailableTimeslots(schedule).size());
-    }
-
-    @Test
-    public void testWithBlocks() throws Exception {
         MeetingDAO mdao = new MeetingDAO();
 
         LocalDateTime start = LocalDateTime.of(2018,12,04,8,0,0);
@@ -80,25 +70,44 @@ public class TestParticipantSearch {
 
         tnadao.addTimeNotAvailable(tna);
         Assert.assertEquals(1, tnadao.getAllTimesNotAvailableForScheduleId(scheduleId).size());
+    }
 
+    @Test
+    public void testTimeSlotCreation() {
+        ParticipantSearchScheduleRequest req = new ParticipantSearchScheduleRequest(null, scheduleId);
 
-        ScheduleQuery query0 = new ScheduleQuery();
-        ParticipantSearchScheduleRequest request0 = new ParticipantSearchScheduleRequest(query0, scheduleId);
-        Assert.assertEquals(3, request0.execute().size());
+        Assert.assertEquals(5, req.generateAllAvailableTimeslots(schedule).size());
+    }
 
-        ScheduleQuery query1 = new ScheduleQuery();
-        query1.setStartTime(LocalDateTime.of(2018,12,04,11,0,0));
-        ParticipantSearchScheduleRequest request1 = new ParticipantSearchScheduleRequest(query1, scheduleId);
-        Assert.assertEquals(2, request1.execute().size());
+    @Test
+    public void testNoQuery() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(3, request.execute().size());
+    }
 
-        ScheduleQuery query2 = new ScheduleQuery();
-        query2.setStartTime(LocalDateTime.of(2018,12,05,10,0,0));
-        ParticipantSearchScheduleRequest request2 = new ParticipantSearchScheduleRequest(query2, scheduleId);
-        Assert.assertEquals(3, request2.execute().size());
+    @Test
+    public void testStartTimeLate() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setStartTime(LocalDateTime.of(2018, 12, 04, 11, 0, 0));
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(2, request.execute().size());
+    }
 
-        ScheduleQuery query3 = new ScheduleQuery();
-        query2.setEndTime(LocalDateTime.of(2018,12,05,12,0,0));
-        ParticipantSearchScheduleRequest request3 = new ParticipantSearchScheduleRequest(query3, scheduleId);
-        Assert.assertEquals(2, request2.execute().size());
+    @Test
+    public void testStartTimeEarlier() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setStartTime(LocalDateTime.of(2018, 12, 04, 10, 0, 0));
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        Assert.assertEquals(3, request.execute().size());
+    }
+
+    @Test
+    public void testEndTime() throws Exception {
+        ScheduleQuery query = new ScheduleQuery();
+        query.setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
+        ParticipantSearchScheduleRequest request = new ParticipantSearchScheduleRequest(query, scheduleId);
+        System.out.println(request.execute());
+        Assert.assertEquals(2, request.execute().size());
     }
 }
