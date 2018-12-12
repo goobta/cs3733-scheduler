@@ -83,7 +83,7 @@ public class SysAdminDaySearchHandler extends LambdaHandler {
             this.response.setStatusCode(400);
             return false;
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
 
             this.response.setStatusCode(500);
             return false;
