@@ -43,10 +43,11 @@ public class CancelOrgMeetingHandler extends LambdaHandler {
         String meetingId = request.queryStringParameters.get("meetingId");
 
         MeetingDAO dao = new MeetingDAO();
-        if (dao.deleteMeeting(meetingId)) {
+        try {
+        	dao.deleteMeeting(meetingId);
             this.response.setStatusCode(204);
             return true;
-        } else {
+        } catch (Exception e) {
             this.response.setStatusCode(404);
             return false;
         }
