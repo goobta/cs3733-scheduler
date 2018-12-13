@@ -75,9 +75,7 @@ public class GetScheduleGETResponse {
 
     public void generateRequest() {
         this.timesNotAvailable = new ArrayList<>();
-
-        System.out.println("TIMES NOT AVAILABLE: " + this.timesNotAvailableObj);
-
+        
         if(this.timesNotAvailableObj == null) return;
 
         for (TimeNotAvailable timeNotAvailable : this.timesNotAvailableObj) {
