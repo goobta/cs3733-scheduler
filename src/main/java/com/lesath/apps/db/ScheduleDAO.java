@@ -169,11 +169,11 @@ public class ScheduleDAO {
 		   LocalDateTime cutoff = LocalDateTime.now().minusDays(days);
 
 		   if(allSchedules == null) {
-		       return null;
+		       return new ArrayList<Schedule>();
            }
 
 		   for(Schedule s: allSchedules) {
-			   if(s.getCreated_at().isAfter(cutoff)) {
+			   if(s.getCreated_at().isBefore(cutoff)) {
 				   schedules.add(s);
 			   }
 		   }
