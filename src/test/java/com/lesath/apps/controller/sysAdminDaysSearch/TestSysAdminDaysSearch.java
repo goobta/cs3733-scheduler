@@ -56,6 +56,7 @@ public class TestSysAdminDaysSearch {
         sched2.setUuid(uuid2);
         sched3.setUuid(uuid3);
 
+        TimeUnit.SECONDS.sleep(1);
         ArrayList<Schedule> scheds = sdao.getSchedulesDaysOld(0);
         assertFalse(scheds.isEmpty());
 
@@ -65,8 +66,7 @@ public class TestSysAdminDaysSearch {
                 got++;
             }
         }
-        TimeUnit.SECONDS.sleep(1);
-        Assert.assertFalse(got == 0);
+        Assert.assertTrue(got == 3);
     }
 
     @Test
