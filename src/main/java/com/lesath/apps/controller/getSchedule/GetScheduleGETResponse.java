@@ -51,6 +51,7 @@ public class GetScheduleGETResponse {
 
         try {
             this.meetings = mDAO.getAllMeetingsForSchedule(this.uuid);
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -74,6 +75,10 @@ public class GetScheduleGETResponse {
 
     public void generateRequest() {
         this.timesNotAvailable = new ArrayList<>();
+
+        System.out.println("TIMES NOT AVAILABLE: " + this.timesNotAvailableObj);
+
+        if(this.timesNotAvailableObj == null) return;
 
         for (TimeNotAvailable timeNotAvailable : this.timesNotAvailableObj) {
             this.timesNotAvailable.add(timeNotAvailable.getStart_time());
