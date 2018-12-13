@@ -48,7 +48,7 @@ public class TestCreateSchedule {
         
 
         TestAPIGatewayRequest req = new TestAPIGatewayRequest();
-        req.addQueryParameter("scheduleId", "1cff2cff-d253-4b85-bfcb-478bc39ed65d");
+        req.addQueryParameter("scheduleId", "ggfa4b58-b7d8-40ab-b192-c62492a8a565");
 
         InputStream input = req.generateRequest(HTTPMethod.DELETE);
         OutputStream output = new ByteArrayOutputStream();
@@ -58,6 +58,6 @@ public class TestCreateSchedule {
         createScheduleHandler.handleRequest(input, output, context);
 
         LambdaResponse response = LambdaHandler.gson.fromJson(output.toString(), LambdaResponse.class);
-        Assert.assertEquals(response.statusCode, 204);
+        Assert.assertEquals(response.statusCode, 404);
     }
 }
