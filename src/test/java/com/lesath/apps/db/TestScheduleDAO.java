@@ -49,7 +49,7 @@ public class TestScheduleDAO {
 		String uuid3 = sdao.addSchedule(sched3);
 		sched2.setUuid(uuid2);
 		sched3.setUuid(uuid3);
-		ArrayList<Schedule> scheds = sdao.getSchedulesDaysOld(2);
+		ArrayList<Schedule> scheds = sdao.getSchedulesDaysOld(0);
 		int got = 0;
 		assertFalse(scheds.isEmpty());
 		for(Schedule s: scheds) {
@@ -57,7 +57,7 @@ public class TestScheduleDAO {
 				got++;
 			}
 		}
-		assertTrue(got==3);
+		assertFalse(got==0);
 		scheds = sdao.getSchedulesHoursOld(2);
 		got = 0;
 		assertFalse(scheds.isEmpty());

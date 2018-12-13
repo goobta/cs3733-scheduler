@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertFalse;
 
@@ -55,7 +56,8 @@ public class TestSysAdminDaysSearch {
         sched2.setUuid(uuid2);
         sched3.setUuid(uuid3);
 
-        ArrayList<Schedule> scheds = sdao.getSchedulesDaysOld(2);
+        TimeUnit.SECONDS.sleep(1);
+        ArrayList<Schedule> scheds = sdao.getSchedulesDaysOld(0);
         assertFalse(scheds.isEmpty());
 
         int got = 0;
@@ -64,14 +66,13 @@ public class TestSysAdminDaysSearch {
                 got++;
             }
         }
-
-        Assert.assertEquals(3, got);
+        Assert.assertTrue(got == 3);
     }
 
     @Test
     public void testNDaysOldSchedulesGET() throws IOException {
         TestAPIGatewayRequest req = new TestAPIGatewayRequest();
-        req.addQueryParameter("days", "2");
+        req.addQueryParameter("days", "0");
 
         InputStream input = req.generateRequest(HTTPMethod.GET);
         OutputStream output = new ByteArrayOutputStream();
@@ -96,7 +97,7 @@ public class TestSysAdminDaysSearch {
     @Test
     public void testNDaysOldSchedulesDELETE() throws Exception {
         TestAPIGatewayRequest req = new TestAPIGatewayRequest();
-        req.addQueryParameter("days", "2");
+        req.addQueryParameter("days", "0");
 
         InputStream input = req.generateRequest(HTTPMethod.DELETE);
         OutputStream output = new ByteArrayOutputStream();
@@ -105,6 +106,6 @@ public class TestSysAdminDaysSearch {
         SysAdminDaySearchHandler handler = new SysAdminDaySearchHandler();
         handler.handleRequest(input, output, context);
 
-        Assert.assertNull(sdao.getSchedulesDaysOld(2));
+        Assert.assertTrue(sdao.getSchedulesDaysOld(1000).isEmpty());
     }
 }
