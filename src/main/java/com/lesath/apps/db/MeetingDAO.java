@@ -32,7 +32,13 @@ public class MeetingDAO {
 			Statement statement = conn.createStatement();
 			String query = "SELECT * FROM Scheduler.Meetings WHERE deleted_at IS null AND schedule_id=\"" + m.getSchedule_id() + "\" AND start_time=\"" + m.getStart_time() + "\";";
 			ResultSet existingSet = statement.executeQuery(query);
-			if(existingSet.first()) {
+			boolean alreadyExists = existingSet.first();
+			
+			Statement statement2 = conn.createStatement();
+			query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE deleted_at is null AND schedule_id=\"" + m.getSchedule_id() + "\" AND start_time=\"" + m.getStart_time() + "\";";
+			ResultSet notAvailableSet = statement2.executeQuery(query);
+			boolean notAvailable = notAvailableSet.first();
+			if(alreadyExists || notAvailable) {
 				return null;
 			}
 			

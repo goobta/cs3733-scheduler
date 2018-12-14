@@ -28,9 +28,16 @@ public class TimesNotAvailableDAO {
 	
 	public String addTimeNotAvailable(TimeNotAvailable t) throws Exception {
 		try {
+			Statement statement1 = conn.createStatement();
+			String query = "SELECT * FROM Scheduler.Meetings WHERE deleted_at IS null AND schedule_id=\"" + t.getSchedule_id() + "\" AND start_time=\"" + t.getStart_time() + "\";";
+			ResultSet existingSet = statement1.executeQuery(query);
+			if(existingSet.first()) {
+				return null;
+			}
+			
 			String startString = t.getStart_time().toString().replaceAll("T", " ");
 			Statement statement = conn.createStatement();
-			String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + t.getSchedule_id() + "\" AND start_time=\"" + startString + "\";";
+			query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + t.getSchedule_id() + "\" AND start_time=\"" + startString + "\";";
 			ResultSet resultSet = statement.executeQuery(query);
 			if(resultSet.first()) {
 				TimeNotAvailable oldTna = generateTimeNotAvailable(resultSet); 
