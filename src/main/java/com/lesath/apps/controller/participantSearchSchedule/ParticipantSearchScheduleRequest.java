@@ -72,7 +72,7 @@ public class ParticipantSearchScheduleRequest {
 
             System.out.println("Instant: " + instant + " Status: " + valid);
 
-            if(valid) availableSlots.add(instant.plusHours(5));
+            if(valid) availableSlots.add(instant);
         }
 
         return availableSlots;
