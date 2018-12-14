@@ -32,7 +32,13 @@ public class ToggleTimeSlotHandler extends LambdaHandler {
     	String scheduleId = request.queryStringParameters.get("scheduleId");
     	logger.log("scheduleId");
     	logger.log(scheduleId);
-    	boolean boo = new ToggleTimeSlotRequest(scheduleId, t).execute();
+    	Boolean boo = new ToggleTimeSlotRequest(scheduleId, t).execute();
+    	if(boo == null) {
+    		ToggleTimeSlotResponse res = new ToggleTimeSlotResponse(true);
+    		this.response.setStatusCode(409);
+    		this.response.setBody(gson.toJson(res));
+    		return false;
+    	}
     	logger.log("bool");
     	if(boo) {
     		logger.log("True");
