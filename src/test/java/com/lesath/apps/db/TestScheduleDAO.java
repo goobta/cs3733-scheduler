@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
@@ -49,6 +50,9 @@ public class TestScheduleDAO {
 		String uuid3 = sdao.addSchedule(sched3);
 		sched2.setUuid(uuid2);
 		sched3.setUuid(uuid3);
+
+		TimeUnit.SECONDS.sleep(1);
+
 		ArrayList<Schedule> scheds = sdao.getSchedulesDaysOld(0);
 		int got = 0;
 		assertFalse(scheds.isEmpty());
