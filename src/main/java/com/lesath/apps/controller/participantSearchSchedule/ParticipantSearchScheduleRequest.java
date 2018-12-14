@@ -31,33 +31,38 @@ public class ParticipantSearchScheduleRequest {
 
         MeetingDAO mDAO = new MeetingDAO();
         ArrayList<Meeting> meetings = mDAO.getAllMeetingsForSchedule(scheduleId);
-        ArrayList<LocalDateTime> meetingTimesRaw = new ArrayList<>();
+        ArrayList<String> meetingTimesRaw = new ArrayList<>();
 
         if(meetings != null) {
             for (Meeting meeting : meetings) {
-                meetingTimesRaw.add(meeting.getStart_time());
+                meetingTimesRaw.add(meeting.getStart_time().toString());
             }
         }
 
-        HashSet<LocalDateTime> meetingTimes = new HashSet<>(meetingTimesRaw);
+        HashSet<String> meetingTimes = new HashSet<>(meetingTimesRaw);
 
 
         TimesNotAvailableDAO tDAO = new TimesNotAvailableDAO();
         ArrayList<TimeNotAvailable> tna = tDAO.getAllTimesNotAvailableForScheduleId(scheduleId);
-        ArrayList<LocalDateTime> timesNotAvailableRaw = new ArrayList<>();
+        ArrayList<String> timesNotAvailableRaw = new ArrayList<>();
+
 
         if(tna != null) {
-            for(TimeNotAvailable t : tna) {
-                timesNotAvailableRaw.add(t.getStart_time());
+            for (TimeNotAvailable t : tna) {
+                timesNotAvailableRaw.add(t.getStart_time().toString());
             }
         }
 
-        HashSet<LocalDateTime> timesNotAvailable = new HashSet<>(timesNotAvailableRaw);
+        HashSet<String> timesNotAvailable = new HashSet<>(timesNotAvailableRaw);
+
+        System.out.println("Meetings: " + meetingTimes);
+        System.out.println("TNAS: " + timesNotAvailable);
 
         for (LocalDateTime instant : generateAllAvailableTimeslots(s)) {
+            instant = instant.minusHours(5);
             boolean valid = true;
 
-            valid &= !(timesNotAvailable.contains(instant) || meetingTimes.contains(instant));
+            valid &= !(timesNotAvailable.contains(instant.toString()) || meetingTimes.contains(instant.toString()));
             valid &= this.query.getMonth() == null || instant.getMonth().getValue() == this.query.getMonth();
             valid &= this.query.getDay() == null || instant.getDayOfMonth() == this.query.getDay();
             valid &= this.query.getYear() == null || instant.getYear() == this.query.getYear();
@@ -65,7 +70,9 @@ public class ParticipantSearchScheduleRequest {
             valid &= this.query.getEndTime() == null || instant.withSecond(0).isBefore(LocalDateTime.of(instant.toLocalDate(), this.query.getEndTime().toLocalTime()));
             valid &= this.query.getStartTime() == null || instant.withSecond(59).isAfter(LocalDateTime.of(instant.toLocalDate(), this.query.getStartTime().toLocalTime().withSecond(0)));
 
-            if(valid) availableSlots.add(instant);
+            System.out.println("Instant: " + instant + " Status: " + valid);
+
+            if(valid) availableSlots.add(instant.plusHours(5));
         }
 
         return availableSlots;
