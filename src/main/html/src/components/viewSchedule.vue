@@ -3,6 +3,7 @@
 		<h1>{{ schedule.name }}</h1>
 		<button :disabled='page == 0' class='button' @click='page--'>Previous Page</button>
 		<button :disabled='atEnd' class='button' @click='page++'>Next Page</button>
+		<button class='button' @click='search()'>Search</button>
 		<table class='table is-bordered'>
 			<tbody>
 				<tr>
@@ -30,7 +31,7 @@
 						{{ time.time }}
 					</td>
 					<td v-for='timeSlot in time.days' v-bind:class="{ unavailable: !timeSlot.inBounds }">
-						<button v-if='timeSlot.available' class='button' @click='createMeeting(timeSlot.day, timeSlot.time)'>Free</button>
+						<button v-if='timeSlot.available' class='button' @click='createMeeting(timeSlot.day, timeSlot.time)'>Book</button>
 						<div v-if='timeSlot.inBounds && timeSlot.name'>
 							<p class='has-text-centered'>{{ timeSlot.name }}</p>
 							<button @click='cancelMeeting(timeSlot)'>cancel</button>
@@ -56,7 +57,6 @@ export default {
 	},
 	computed: {
 		currentWeek: function () {
-			//localhost:8080/#/viewSchedule?uuid=41eea1a1-dcf1-4e77-ae6e-049a2c0650c3
 			let currentWeek = [];
 			for (let i = 0; i < this.times.length; i ++) {
 				currentWeek.push({
@@ -80,15 +80,19 @@ export default {
 		},
 		meetings: function () {
 			let temp = {};
-			for(let i = 0; i < this.schedule.meetings.length; i++){
-				temp[this.schedule.meetings[i].startTime] = this.schedule.meetings[i].participantName;
+			if(this.schedule.meetings){
+				for(let i = 0; i < this.schedule.meetings.length; i++){
+					temp[this.schedule.meetings[i].startTime] = this.schedule.meetings[i].participantName;
+				}
 			}
 			return temp;
 		},
 		notAviable: function () {
 			let temp = {};
-			for(let i = 0; i < this.schedule.timesNotAvailable.length; i++){
-				temp[this.schedule.timesNotAvailable[i]] = true;
+			if(this.schedule.timesNotAvailable){
+				for(let i = 0; i < this.schedule.timesNotAvailable.length; i++){
+					temp[this.schedule.timesNotAvailable[i]] = true;
+				}
 			}
 			return temp;
 		}
@@ -105,17 +109,12 @@ export default {
 			let startDate = new Date(this.schedule.startDateTime);
 			let endDate = new Date(this.schedule.endDateTime);
 
-			console.log(startDate);
-			console.log(endDate);
-
 			let startMinutes = (startDate.getHours() * 60) + startDate.getMinutes();
 			let endMinutes = (endDate.getHours() * 60) + endDate.getMinutes();
-
 			for (let i = startMinutes; i < endMinutes; i = i + this.schedule.meetingDuration) {
 				let temp = [];
 				let cursorDate = new Date(this.schedule.startDateTime);
 				let lastDate = new Date(this.schedule.endDateTime);
-				console.log(cursorDate);
 				cursorDate.setHours(0,0);
 				lastDate.setHours(23,59);
 
@@ -163,14 +162,12 @@ export default {
 							available: false
 						});
 					}
-
 					if (cursorDate.getDay() == 5){
 						cursorDate.setDate(cursorDate.getDate() + 3);
 					} else {
 						cursorDate.setDate(cursorDate.getDate() + 1);
 					}
 				}
-
 				this.times.push({
 					time: Math.floor(i/60) + ':' + (i%60 == 0 ? '00': (i%60 == 5 ? '05' : i%60)),
 					days: temp
@@ -210,13 +207,16 @@ export default {
 		      })
 		        .catch(error => console.error('Error:', error));
 		    location.reload();
+		},
+		async search () {
+			window.location.href = 'https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html#/scheduleSearch?uuid=' + this.uuid;
 		}
-
 	},
 	async created () {
 		this.uuid = this.$route.query.uuid;
 		await this.getSchedule();
-		this.parseSchedule();
+		console.log('a')
+		await this.parseSchedule();
 	}
 }
 </script>

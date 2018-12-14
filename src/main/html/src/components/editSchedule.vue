@@ -3,31 +3,46 @@
 		<h1>{{ schedule.name }}</h1>
 		<button :disabled='page == 0' class='button' @click='page--'>Previous Page</button>
 		<button :disabled='atEnd' class='button' @click='page++'>Next Page</button>
+		<button class='button is-danger' @click='deleteSchedule()'>Delete</button>
 		<table class='table is-bordered'>
 			<tbody>
 				<tr>
 					<th>
-						{{ dateRange }}
+						{{ dateRange }}</br>
+						<button @click='extend(-1)'>Extend day left</button>
+						<button @click='extend(1)'>Extend day right</button>
 					</th>
 					<th>
-						Monday
+						Monday</br>
+						<button @click='openDay(0)'>Open</button>
+						<button @click='cancelDay(0)'>Close</button>
 					</th>
 					<th>
-						Tuesday
+						Tuesday</br>
+						<button @click='openDay(1)'>Open</button>
+						<button @click='cancelDay(1)'>Close</button>
 					</th>
 					<th>
-						Wednesday
+						Wednesday</br>
+						<button @click='openDay(2)'>Open</button>
+						<button @click='cancelDay(2)'>Close</button>
 					</th>
 					<th>
-						Thursday
+						Thursday</br>
+						<button @click='openDay(3)'>Open</button>
+						<button @click='cancelDay(3)'>Close</button>
 					</th>
 					<th>
-						Friday
+						Friday</br>
+						<button @click='openDay(4)'>Open</button>
+						<button @click='cancelDay(4)'>Close</button>
 					</th>
 				</tr>
-				<tr v-for='time in currentWeek'>
+				<tr v-for='time, index in currentWeek'>
 					<td>
 						{{ time.time }}
+						<button @click='openTime(index)'>Open</button>
+						<button @click='cancelTime(index)'>Close</button>
 					</td>
 					<td v-for='timeSlot in time.days' v-bind:class="[ 'noPadding', !timeSlot.inBounds ? 'notInBounds' : '' ]">
 						<div v-if='timeSlot.inBounds && !timeSlot.name' class='columns noMargin' @click='toggleTimeslot(timeSlot)'>
@@ -86,18 +101,22 @@ export default {
 		},
 		meetings: function () {
 			let temp = {};
-			for(let i = 0; i < this.schedule.meetings.length; i++){
-				temp[this.schedule.meetings[i].startTime] = {
-					name: this.schedule.meetings[i].participantName,
-					id: this.schedule.meetings[i].meetingId
+			if(this.schedule.meetings){
+				for(let i = 0; i < this.schedule.meetings.length; i++){
+					temp[this.schedule.meetings[i].startTime] = {
+						name: this.schedule.meetings[i].participantName,
+						id: this.schedule.meetings[i].id
+					}
 				}
 			}
 			return temp;
 		},
 		notAviable: function () {
 			let temp = {};
-			for(let i = 0; i < this.schedule.timesNotAvailable.length; i++){
-				temp[this.schedule.timesNotAvailable[i]] = true;
+			if(this.schedule.timesNotAvailable){
+				for(let i = 0; i < this.schedule.timesNotAvailable.length; i++){
+					temp[this.schedule.timesNotAvailable[i]] = true;
+				}
 			}
 			return temp;
 		}
@@ -189,7 +208,6 @@ export default {
 				startTime,
 				status: timeslot.available
 			}
-			console.log(timeslot.available);
 			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/toggleTimeslot?scheduleId=' + this.uuid,{
 				method: 'POST',
 				body: JSON.stringify(body),
@@ -199,6 +217,141 @@ export default {
 			})
 			.then(res => res.json())
 	        .catch(error => console.error('Error:', error));
+		},
+		async cancelMeeting (timeSlot) {
+			console.log(timeSlot)
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/cancelorgmeeting?scheduleId=' + this.uuid + "&meetingId=" + timeSlot.meetingId, {
+		        method: 'DELETE',
+		        headers:{
+		          'Content-Type': 'application/json'
+		        }
+		      })
+		        .catch(error => console.error('Error:', error));
+		    location.reload();
+		},
+		async cancelDay (dayOfWeek) {
+			let temp = [];
+			for (let i = 0; i < this.currentWeek.length; i++) {
+				let date = new Date(this.currentWeek[i].days[dayOfWeek].day);
+				let time = this.currentWeek[i].days[dayOfWeek].time;
+				date.setUTCHours(Math.floor(time/60), time%60)
+				temp.push(date);
+			}
+			let body = {
+				scheduleId: this.uuid,
+				times: temp
+			}
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/multitoggletimeslot',{
+				method: 'PUT',
+				body: JSON.stringify(body),
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .catch(error => console.error('Error:', error));
+	        location.reload();
+		},
+		async cancelTime (index) {
+			let days = this.currentWeek[index].days;
+			let temp = [];
+			for (let i = 0; i < days.length; i++) {
+				if (days[i].inBounds) {
+					let date = new Date(days[i].day);
+					let time = days[i].time;
+					date.setUTCHours(Math.floor(time/60), time%60)
+					temp.push(date)
+				}
+			}
+			let body = {
+				scheduleId: this.uuid,
+				times: temp
+			}
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/multitoggletimeslot',{
+				method: 'PUT',
+				body: JSON.stringify(body),
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .catch(error => console.error('Error:', error));
+	        location.reload();
+		},
+		async openDay (dayOfWeek) {
+			let temp = [];
+			for (let i = 0; i < this.currentWeek.length; i++) {
+				let date = new Date(this.currentWeek[i].days[dayOfWeek].day);
+				let time = this.currentWeek[i].days[dayOfWeek].time;
+				date.setUTCHours(Math.floor(time/60), time%60)
+				temp.push(date);
+			}
+			let body = {
+				scheduleId: this.uuid,
+				times: temp
+			}
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/multitoggletimeslot',{
+				method: 'DELETE',
+				body: JSON.stringify(body),
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .catch(error => console.error('Error:', error));
+	        location.reload();
+		},
+		async openTime (index) {
+			let days = this.currentWeek[index].days;
+			let temp = [];
+			for (let i = 0; i < days.length; i++) {
+				if (days[i].inBounds) {
+					let date = new Date(days[i].day);
+					let time = days[i].time;
+					date.setUTCHours(Math.floor(time/60), time%60)
+					temp.push(date)
+				}
+			}
+			let body = {
+				scheduleId: this.uuid,
+				times: temp
+			}
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/multitoggletimeslot',{
+				method: 'DELETE',
+				body: JSON.stringify(body),
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .catch(error => console.error('Error:', error));
+	        location.reload();
+		},
+		async extend (deltaDays) {
+			let body = {
+				deltaDays
+			}
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/extendSchedule?scheduleId=' + this.uuid,{
+				method: 'POST',
+				body: JSON.stringify(body),
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .catch(error => console.error('Error:', error));
+	        location.reload();
+		},
+		async deleteSchedule () {
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/organizerSchedule?scheduleId=' + this.uuid,{
+				method: 'DELETE',
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .catch(error => console.error('Error:', error));
+	        location.reload();
 		}
 	},
 	async created () {
