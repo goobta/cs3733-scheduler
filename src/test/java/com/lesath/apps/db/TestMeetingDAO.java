@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.lesath.apps.model.Meeting;
+import com.lesath.apps.model.TimeNotAvailable;
 
 /**
  * @author Andy
@@ -25,9 +26,17 @@ public class TestMeetingDAO {
 		MeetingDAO mdao = new MeetingDAO();
 		LocalDateTime start = LocalDateTime.of(2018,12,04,8,0,0);
 		LocalDateTime created = LocalDateTime.of(2018,12,04,10,0,0);
-		Meeting meeting = new Meeting(UUID.randomUUID().toString(),null,start,created,null,"TestName");
+		String schedule_id = UUID.randomUUID().toString();
+		TimesNotAvailableDAO tnadao = new TimesNotAvailableDAO();
+		String tnaUUID = tnadao.addTimeNotAvailable(new TimeNotAvailable(schedule_id, null, start, null, null));
+		assertNotNull(tnaUUID);
+		Meeting meeting = new Meeting(schedule_id,null,start,created,null,"TestName");
 		
 		String uuid = mdao.addMeeting(meeting);
+		assertNull(uuid);
+		DatabaseUtil.connect().prepareStatement("DELETE FROM Scheduler.TimesNotAvailable WHERE uuid=\"" + tnaUUID + "\";").execute();
+		uuid = mdao.addMeeting(meeting);
+		
 		meeting.setUuid(uuid);
 		assertNull(mdao.addMeeting(meeting));
 		Meeting gotMeeting = mdao.getMeeting(uuid);

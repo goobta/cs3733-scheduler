@@ -19,19 +19,18 @@ public class ToggleTimeSlotRequest {
 		
 	}
 	 
-	public boolean execute() {
-		
+	public Boolean execute() {
 		try {
 			TimesNotAvailableDAO tDao = new TimesNotAvailableDAO();
 				if(!typeOfToggle) {
-					
 					String uuid = tDao.addTimeNotAvailable(t);
+					if(uuid == null) {
+						return null;
+					}
 				}
 				else {
-					
 					boolean boo = tDao.deleteTimeNotAvailable(t.getSchedule_id(), t.getStart_time());
 					return boo;
-					
 				}
 				return true;
 		}

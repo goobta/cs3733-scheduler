@@ -217,6 +217,7 @@ export default {
 			})
 			.then(res => res.json())
 	        .catch(error => console.error('Error:', error));
+	        location.reload();
 		},
 		async cancelMeeting (timeSlot) {
 			console.log(timeSlot)
