@@ -54,8 +54,8 @@ public class TestParticipantSearchHandler {
 
         MeetingDAO mdao = new MeetingDAO();
 
-        LocalDateTime start = LocalDateTime.of(2018,12,04,8,0,0);
-        LocalDateTime created = LocalDateTime.of(2018,12,04,10,0,0);
+        LocalDateTime start = LocalDateTime.of(2018,12,04,3,0,0);
+        LocalDateTime created = LocalDateTime.of(2018,12,04,5,0,0);
         Meeting meeting = new Meeting(
                 scheduleId,
                 null,
@@ -69,8 +69,8 @@ public class TestParticipantSearchHandler {
 
 
         TimesNotAvailableDAO tnadao = new TimesNotAvailableDAO();
-        LocalDateTime startT = LocalDateTime.of(2018,12,04,9,0,0);
-        LocalDateTime createdT = LocalDateTime.of(2018,12,04,10,0,0);
+        LocalDateTime startT = LocalDateTime.of(2018,12,04,4,0,0);
+        LocalDateTime createdT = LocalDateTime.of(2018,12,04,6,0,0);
         TimeNotAvailable tna = new TimeNotAvailable(
                 scheduleId,
                 null,
@@ -110,7 +110,7 @@ public class TestParticipantSearchHandler {
     @Test
     public void testStartTimeLate() throws Exception {
         ScheduleQuery query = new ScheduleQuery();
-        query.setStartTime(LocalDateTime.of(2018, 12, 04, 11, 0, 0));
+        query.setStartTime(LocalDateTime.of(2018, 12, 04, 6, 0, 0));
 
         executeRequest(query, 2);
     }
@@ -118,7 +118,7 @@ public class TestParticipantSearchHandler {
     @Test
     public void testStartTimeEarlier() throws Exception {
         ScheduleQuery query = new ScheduleQuery();
-        query.setStartTime(LocalDateTime.of(2018, 12, 04, 10, 0, 0));
+        query.setStartTime(LocalDateTime.of(2018, 12, 04, 2, 0, 0));
 
         executeRequest(query, 3);
     }
@@ -126,7 +126,7 @@ public class TestParticipantSearchHandler {
     @Test
     public void testEndTime() throws Exception {
         ScheduleQuery query = new ScheduleQuery();
-        query.setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
+        query.setEndTime(LocalDateTime.of(2018, 12, 04, 7, 0, 0));
 
         executeRequest(query, 2);
     }
@@ -201,11 +201,9 @@ public class TestParticipantSearchHandler {
         query.setYear(2018)
                 .setMonth(12)
                 .setDay(4)
-                .setDayOfTheWeek(2)
-                .setStartTime(LocalDateTime.of(2018, 12, 04, 11, 0, 0))
-                .setEndTime(LocalDateTime.of(2018, 12, 04, 12, 0, 0));
+                .setDayOfTheWeek(2);
 
-        executeRequest(query, 1);
+        executeRequest(query, 3);
     }
 
     @Test
