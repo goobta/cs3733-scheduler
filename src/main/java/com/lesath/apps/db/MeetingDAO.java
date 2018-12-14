@@ -28,8 +28,15 @@ public class MeetingDAO {
 	}
 	
 	public String addMeeting(Meeting m) throws Exception {
-		String uuid = UUID.randomUUID().toString();
 		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM Scheduler.Meetings WHERE deleted_at IS null AND schedule_id=\"" + m.getSchedule_id() + "\" AND start_time=\"" + m.getStart_time() + "\";";
+			ResultSet existingSet = statement.executeQuery(query);
+			if(existingSet.first()) {
+				return null;
+			}
+			
+			String uuid = UUID.randomUUID().toString();
 			PreparedStatement ps;
             ps = conn.prepareStatement("INSERT INTO Meetings (schedule_id, uuid, start_time, created_at, "
             		+ "deleted_at, participant_name) "
@@ -57,10 +64,9 @@ public class MeetingDAO {
 		Meeting meeting;
 		try {
 			Statement statement = conn.createStatement();
-			String query = "SELECT * FROM Scheduler.Meetings WHERE uuid=\"" + uuid + "\";";
+			String query = "SELECT * FROM Scheduler.Meetings WHERE uuid=\"" + uuid + "\" AND deleted_at IS null;";
 			ResultSet resultSet = statement.executeQuery(query);
-			if(resultSet != null) {
-				resultSet.first();
+			if(resultSet.first()) {
 				meeting = generateMeeting(resultSet);
 			}
 			else {
@@ -82,55 +88,55 @@ public class MeetingDAO {
 			String query = "SELECT * FROM Scheduler.Meetings WHERE deleted_at IS null;";
 			ResultSet resultSet = statement.executeQuery(query);
 			
-			if(resultSet != null) {
-				while(resultSet.next()) {
-					meetings.add(generateMeeting(resultSet));
-				}
-			}
-			else {
-				meetings = null;
+			while(resultSet.next()) {
+				meetings.add(generateMeeting(resultSet));
 			}
 			resultSet.close();
             statement.close();
-            return meetings;
+            if(meetings.isEmpty()) {
+            	return null;
+            }
+            else {
+            	return meetings;
+            }
 		} catch(Exception e) {
-			throw new Exception("Failed to get meetings: " + e.getMessage());
+			throw new Exception("Failed to get all meetings: " + e.getMessage());
 		}
 	}
 
 	public ArrayList<Meeting> getAllMeetingsForSchedule(String scheduleId) throws Exception {
 		ArrayList<Meeting> meetings = new ArrayList<>();
-
-		Statement statement = conn.createStatement();
-		String query = "SELECT * FROM Scheduler.Meetings WHERE schedule_id=\"" + scheduleId + "\" and deleted_at IS null;";
-		ResultSet resultSet = statement.executeQuery(query);
-
-		if(resultSet != null) {
+			try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM Scheduler.Meetings WHERE schedule_id=\"" + scheduleId + "\" and deleted_at IS null;";
+			ResultSet resultSet = statement.executeQuery(query);
+	
 			while(resultSet.next()) {
 				meetings.add(generateMeeting(resultSet));
 			}
-
 			resultSet.close();
+			statement.close();
+			if(meetings.isEmpty()) {
+				return null;
+			}
+			else {
+				return meetings;
+			}
+		} catch(Exception e) {
+			throw new Exception("Failed to get all meetings for schedule: " + e.getMessage());
 		}
-		statement.close();
-
-		return meetings;
 	}
 	
-	public boolean deleteMeeting(String uuid) {
+	public boolean deleteMeeting(String uuid) throws Exception {
 		try {
 			PreparedStatement ps;
 			String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
             ps = conn.prepareStatement("UPDATE Scheduler.Meetings SET deleted_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
             int numAffected = ps.executeUpdate();
-            //System.out.println("num affectd:" + numAffected );
-            if(numAffected == 0) {
-            	return false;
-            }
-			return true;
+            return(numAffected == 1);
 		}
 		catch(Exception e) {
-			return false;
+			throw new Exception("Failed to delete meeting: " + e.getMessage());
 		}
 	}
 	

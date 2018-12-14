@@ -23,29 +23,34 @@ public class CreateMeetingHandler extends LambdaHandler {
     
     @Override
     protected boolean handlePUT(APIGatewayRequest request) {
-    	logger.log("starating createMeetingLambda");
-    	
-    	MeetingInput m = gson.fromJson(request.body, MeetingInput.class);
-    	logger.log("meeting input");
-    	logger.log(request.body);
-    	//String scheduleId = request.pathParameters.get("scheduleId");
-    	String scheduleId = request.queryStringParameters.get("scheduleId");
-    	logger.log("scheduleId");
-    	logger.log(scheduleId);
-    	String uuid = new CreateMeetingRequest(m, scheduleId).execute();
-    	logger.log("uuid");
-    	logger.log(uuid);
-    	CreateMeetingResponse res;
-    	if(uuid != null) {
-    		res = new CreateMeetingResponse(uuid);
-    		this.response.setStatusCode(200);
-            this.response.setBody(gson.toJson(res));
-            return true;
-    	}
-    	else {
-            this.response.setStatusCode(500);
+    	try {
+	    	logger.log("starating createMeetingLambda");
+	    	
+	    	MeetingInput m = gson.fromJson(request.body, MeetingInput.class);
+	    	logger.log("meeting input");
+	    	logger.log(request.body);
+	    	//String scheduleId = request.pathParameters.get("scheduleId");
+	    	String scheduleId = request.queryStringParameters.get("scheduleId");
+	    	logger.log("scheduleId");
+	    	logger.log(scheduleId);
+	    	String uuid = new CreateMeetingRequest(m, scheduleId).execute();
+	    	logger.log("uuid");
+	    	logger.log(uuid);
+	    	CreateMeetingResponse res;
+	    	if(uuid != null) {
+	    		res = new CreateMeetingResponse(uuid);
+	    		this.response.setStatusCode(200);
+	            this.response.setBody(gson.toJson(res));
+	            return true;
+	    	}
+	    	else {
+	            this.response.setStatusCode(409);
+	            return false;
+	        }
+    	} catch(Exception e) {
+    		this.response.setStatusCode(500);
             return false;
-        }
+    	}
         
     }
 
@@ -65,10 +70,15 @@ public class CreateMeetingHandler extends LambdaHandler {
         String meetingId = request.queryStringParameters.get("meetingId");
 
         MeetingDAO dao = new MeetingDAO();
-        if (dao.deleteMeeting(meetingId)) {
+        try {
+        	boolean bool = dao.deleteMeeting(meetingId);
+        	if(!bool) {
+        		this.response.setStatusCode(404);
+                return false;
+        	}
             this.response.setStatusCode(204);
             return true;
-        } else {
+        } catch(Exception e) {
             this.response.setStatusCode(404);
             return false;
         }

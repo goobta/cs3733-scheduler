@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.lesath.apps.controller.sysAdminDaySearch.SysAdminDaySearchHandler;
 import com.lesath.apps.model.Schedule;
 
 
@@ -59,7 +60,7 @@ public class ScheduleDAO {
             return uuid;
 
         } catch (Exception e) {
-            throw new Exception("Failed to insert constant: " + e.getMessage());
+            throw new Exception("Failed to add schedule: " + e.getMessage());
         }
     }
     
@@ -83,39 +84,134 @@ public class ScheduleDAO {
             }
             resultSet.close();
             statement.close();
-            return rowList;
-
+            if(rowList.isEmpty()) {
+            	return null;
+            }
+            else {
+            	return rowList;
+            }
         } catch (Exception e) {
-        	rowList = null;
             throw new Exception("Failed to get all schedules: " + e.getMessage());
         }
     }
    
-   public Schedule getSchedule(String uuid) {
+   public Schedule getSchedule(String uuid) throws Exception {
 	   try {
 		   Schedule schedule;
 		   Statement statement = conn.createStatement();
-		   String query = "SELECT * FROM Schedules WHERE uuid =\"" + uuid + "\";";
+		   String query = "SELECT * FROM Schedules WHERE uuid =\"" + uuid + "\" AND deleted_at IS null;";
 		   ResultSet resultSet = statement.executeQuery(query);
-		   resultSet.next();
-		   schedule = generateSchedule(resultSet);
+		   if(resultSet.first()) {
+			   schedule = generateSchedule(resultSet);
+		   }
+		   else {
+			   schedule = null;
+		   }
 		   resultSet.close();
 		   statement.close();
 		   return schedule;
 	   } catch(Exception e) {
-		   return null;
+		   throw new Exception("Failed to get schedule: " + e.getMessage());
 	   }
    }
    
-   public boolean deleteSchedule(String uuid) {
+   public boolean deleteSchedule(String uuid) throws Exception {
 	   try {
+		   System.out.println("In schedule Dao");
 		   PreparedStatement ps;
 		   String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
 		   ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET deleted_at=\"" + currentTime + "\" WHERE uuid=\"" + uuid + "\";");
-		   ps.execute();
-		   return true;
+		   int numAffected = ps.executeUpdate();
+		   System.out.print("num: ");
+		   System.out.println(numAffected);
+		   return(numAffected == 1);
 	   } catch(Exception e) {
-		   return false;
+		   throw new Exception("Failed to delete schedule: " + e.getMessage());
+	   }
+   }
+   
+   public boolean extendSchedule(String schedule_id, int delta) throws Exception {
+	   try {
+		   if(delta < 0) {
+			   LocalDate start_date = getSchedule(schedule_id).getStart_date();
+			   if(start_date.getDayOfWeek().name() == "MONDAY") {
+				   delta = delta - 2;
+			   }
+			   
+			   
+			   
+			   String startString = start_date.minusDays(-delta).toString().replaceAll("T", " ");
+			   PreparedStatement ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET start_date=\"" + startString + "\" WHERE uuid=\"" + schedule_id + "\";");
+			   int numAffected = ps.executeUpdate();
+			   return(numAffected == 1);
+		   }
+		   else if(delta > 0){
+			   LocalDate end_date = getSchedule(schedule_id).getEnd_date();
+			   if(end_date.getDayOfWeek().name() == "FRIDAY") {
+				   delta = delta + 2;
+			   }
+			   
+			   System.out.println("increase the end day");
+			   String endString = end_date.plusDays(delta).toString().replaceAll("T", " ");
+			   PreparedStatement ps = conn.prepareStatement("UPDATE Scheduler.Schedules SET end_date=\"" + endString + "\" WHERE uuid=\"" + schedule_id + "\";");
+			   int numAffected = ps.executeUpdate();
+			   return(numAffected == 1);
+		   }
+		   else {
+			   return false;
+		   }
+	   } catch(Exception e) {
+		   throw new Exception("Failed to extend schedule: " + e.getMessage());
+	   }
+   }
+   
+   public ArrayList<Schedule> getSchedulesDaysOld(int days) throws Exception{
+	   try {
+		   ArrayList<Schedule> allSchedules = getAllSchedules();
+		   ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		   LocalDateTime cutoff = LocalDateTime.now().minusDays(days);
+
+		   if(allSchedules == null) {
+		       return new ArrayList<Schedule>();
+           }
+
+		   for(Schedule s: allSchedules) {
+			   if(s.getCreated_at().isBefore(cutoff)) {
+				   schedules.add(s);
+			   }
+		   }
+		   return schedules;
+	   } catch(Exception e) {
+	   		e.printStackTrace();
+		   throw new Exception("Failed to get schedules days old: " + e.getMessage());
+	   }
+   }
+   
+   public ArrayList<Schedule> getSchedulesHoursOld(int hours) throws Exception{
+	   try {
+		   ArrayList<Schedule> allSchedules = getAllSchedules();
+		   ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+		   LocalDateTime cutoff = LocalDateTime.now().minusHours(hours);
+		   for(Schedule s: allSchedules) {
+			   if(s.getCreated_at().isAfter(cutoff)) {
+				   schedules.add(s);
+			   }
+		   }
+		   return schedules;
+	   } catch(Exception e) {
+		   throw new Exception("Failed to get schedules hours old: " + e.getMessage());
+	   }
+   }
+   
+   public boolean deleteSchedules(ArrayList<String> uuids) throws Exception {
+	   try {
+		   boolean accum = true;
+		   for(String uuid: uuids) {
+			   accum &= deleteSchedule(uuid);
+		   }
+		   return accum;
+	   } catch(Exception e) {
+		   throw new Exception("Failed to delete schedules: " + e.getMessage());
 	   }
    }
     
@@ -126,22 +222,25 @@ public class ScheduleDAO {
     * @throws Exception when cannot make the object.
     */
     private Schedule generateSchedule(ResultSet resultSet) throws Exception {
-    	
-    	LocalDateTime deleted_at;
-        String uuid = resultSet.getString("uuid");
-        String name = resultSet.getString("name");
-        int duration = resultSet.getInt("duration");
-        LocalDate start_date = LocalDate.parse(resultSet.getString("start_date"));
-        LocalDate end_date = LocalDate.parse(resultSet.getString("end_date"));
-        LocalTime daily_start_time = LocalTime.parse(resultSet.getString("daily_start_time") );
-        LocalTime daily_end_time = LocalTime.parse((resultSet.getString("daily_end_time")));
-        LocalDateTime created_at = LocalDateTime.parse(resultSet.getString("created_at"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        if(resultSet.getString("deleted_at") != null) {
-        	deleted_at = LocalDateTime.parse(resultSet.getString("deleted_at"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        }
-        else {
-        	deleted_at = null;
-        }
-        return new Schedule(uuid, name, duration, start_date, end_date, daily_start_time, daily_end_time, created_at, deleted_at) ;
+    	try {
+	    	LocalDateTime deleted_at;
+	        String uuid = resultSet.getString("uuid");
+	        String name = resultSet.getString("name");
+	        int duration = resultSet.getInt("duration");
+	        LocalDate start_date = LocalDate.parse(resultSet.getString("start_date"));
+	        LocalDate end_date = LocalDate.parse(resultSet.getString("end_date"));
+	        LocalTime daily_start_time = LocalTime.parse(resultSet.getString("daily_start_time") );
+	        LocalTime daily_end_time = LocalTime.parse((resultSet.getString("daily_end_time")));
+	        LocalDateTime created_at = LocalDateTime.parse(resultSet.getString("created_at"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	        if(resultSet.getString("deleted_at") != null) {
+	        	deleted_at = LocalDateTime.parse(resultSet.getString("deleted_at"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	        }
+	        else {
+	        	deleted_at = null;
+	        }
+	        return new Schedule(uuid, name, duration, start_date, end_date, daily_start_time, daily_end_time, created_at, deleted_at) ;
+    	} catch(Exception e) {
+    		throw new Exception("Failed to generate schedule: " + e.getMessage());
+    	}
     }
 }

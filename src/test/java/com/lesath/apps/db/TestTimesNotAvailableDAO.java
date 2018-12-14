@@ -5,7 +5,6 @@ package com.lesath.apps.db;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -13,7 +12,6 @@ import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.lesath.apps.model.Meeting;
 import com.lesath.apps.model.TimeNotAvailable;
 
 /**
@@ -26,7 +24,7 @@ public class TestTimesNotAvailableDAO {
 		TimesNotAvailableDAO tnadao = new TimesNotAvailableDAO();
 		LocalDateTime start = LocalDateTime.of(2018,12,04,8,0,0);
 		LocalDateTime created = LocalDateTime.of(2018,12,04,10,0,0);
-		TimeNotAvailable tna = new TimeNotAvailable("TestTimeNotAvailable",null,start,created,null);
+		TimeNotAvailable tna = new TimeNotAvailable(UUID.randomUUID().toString(),null,start,created,null);
 		
 		String uuid = tnadao.addTimeNotAvailable(tna);
 		tna.setUuid(uuid);
@@ -41,10 +39,25 @@ public class TestTimesNotAvailableDAO {
 		}
 		assertTrue(worked);
 		
+		gotTimesNotAvailable = tnadao.getAllTimesNotAvailableForScheduleId(tna.getSchedule_id());
+		worked = false;
+		for(TimeNotAvailable t: gotTimesNotAvailable) {
+			worked |= t.equals(tna);
+			assertNull(t.getDeleted_at());
+		}
+		assertTrue(worked);
+		
 		assertTrue(tnadao.deleteTimeNotAvailable(tna.getSchedule_id(), tna.getStart_time()));
-		assertFalse(tnadao.deleteTimeNotAvailable("dddf",tna.getStart_time()));
-		gotTimeNotAvailable = tnadao.getTimeNotAvailable(uuid);
-		assertNotNull(gotTimeNotAvailable.getDeleted_at());
+		assertFalse(tnadao.deleteTimeNotAvailable("BadScheduleId",tna.getStart_time()));
+		assertNull(tnadao.getTimeNotAvailable(uuid));
+		assertNull(tnadao.getAllTimesNotAvailableForScheduleId(tna.getSchedule_id()));
+		
+		TimeNotAvailable newTna = tna;
+		newTna.setDeleted_at(null);
+		assertTrue(tnadao.addTimeNotAvailable(newTna).equals(tna.getUuid()));
+		TimeNotAvailable newGotTna = tnadao.getTimeNotAvailable(newTna.getUuid());
+		//assertFalse(gotTimeNotAvailable.getCreated_at().equals(newGotTna.getCreated_at()));
+		assertNull(newGotTna.getDeleted_at());
 		
 		DatabaseUtil.connect().prepareStatement("DELETE FROM Scheduler.TimesNotAvailable WHERE uuid=\"" + uuid + "\";").execute();
 	}

@@ -25,10 +25,11 @@ public class TestMeetingDAO {
 		MeetingDAO mdao = new MeetingDAO();
 		LocalDateTime start = LocalDateTime.of(2018,12,04,8,0,0);
 		LocalDateTime created = LocalDateTime.of(2018,12,04,10,0,0);
-		Meeting meeting = new Meeting("TestMeeting",null,start,created,null,"TestName");
+		Meeting meeting = new Meeting(UUID.randomUUID().toString(),null,start,created,null,"TestName");
 		
 		String uuid = mdao.addMeeting(meeting);
 		meeting.setUuid(uuid);
+		assertNull(mdao.addMeeting(meeting));
 		Meeting gotMeeting = mdao.getMeeting(uuid);
 		assertTrue(gotMeeting.equals(meeting));
 		
@@ -39,10 +40,19 @@ public class TestMeetingDAO {
 			assertNull(m.getDeleted_at());
 		}
 		assertTrue(worked);
+		
+		gotMeetings = mdao.getAllMeetingsForSchedule(meeting.getSchedule_id());
+		worked = false;
+		for(Meeting m: gotMeetings) {
+			worked |= m.equals(meeting);
+			assertNull(m.getDeleted_at());
+		}
+		assertTrue(worked);
 
 		assertTrue(mdao.deleteMeeting(uuid));
-		gotMeeting = mdao.getMeeting(uuid);
-		assertNotNull(gotMeeting.getDeleted_at());
+		assertFalse(mdao.deleteMeeting("NotA_UUID"));
+		assertNull(mdao.getMeeting(uuid));
+		assertNull(mdao.getAllMeetingsForSchedule(meeting.getSchedule_id()));
 		
 		DatabaseUtil.connect().prepareStatement("DELETE FROM Scheduler.Meetings WHERE uuid=\"" + uuid + "\";").execute();
 	}

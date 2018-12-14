@@ -26,24 +26,39 @@ public class TimesNotAvailableDAO {
 		}
 	}
 	
-	public String addTimeNotAvailable(TimeNotAvailable t) throws Exception{
-		String uuid = UUID.randomUUID().toString();
+	public String addTimeNotAvailable(TimeNotAvailable t) throws Exception {
 		try {
-			PreparedStatement ps;
-            ps = conn.prepareStatement("INSERT INTO TimesNotAvailable (schedule_id, uuid, start_time, "
-            		+ "created_at, deleted_at) values(?,?,?,?,?);");
-            ps.setString(1, t.getSchedule_id());
-            ps.setString(2, uuid);
-            ps.setString(3, t.getStart_time().toString());
-            ps.setString(4, LocalDateTime.now().toString().replaceAll("T", " "));
-            if(t.getDeleted_at() != null) {
-            	ps.setString(5, t.getDeleted_at().toString());
-            }
-            else {
-            	ps.setString(5,  null);
-            }
-            ps.execute();
-            return uuid;
+			String startString = t.getStart_time().toString().replaceAll("T", " ");
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + t.getSchedule_id() + "\" AND start_time=\"" + startString + "\";";
+			ResultSet resultSet = statement.executeQuery(query);
+			if(resultSet.first()) {
+				TimeNotAvailable oldTna = generateTimeNotAvailable(resultSet); 
+				PreparedStatement ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET deleted_at=null WHERE uuid=\"" + oldTna.getUuid() + "\";");
+				ps.executeUpdate();
+				String currentTimeString = LocalDateTime.now().toString().replaceAll("T", " ");
+				ps = conn.prepareStatement("UPDATE Scheduler.TimesNotAvailable SET created_at=\"" + currentTimeString + "\" WHERE uuid=\"" + oldTna.getUuid() + "\";");
+				ps.executeUpdate();
+				return oldTna.getUuid();
+			}
+			else {
+				String uuid = UUID.randomUUID().toString();
+				PreparedStatement ps;
+		        ps = conn.prepareStatement("INSERT INTO TimesNotAvailable (schedule_id, uuid, start_time, "
+		        		+ "created_at, deleted_at) values(?,?,?,?,?);");
+		        ps.setString(1, t.getSchedule_id());
+		        ps.setString(2, uuid);
+		        ps.setString(3, t.getStart_time().toString());
+		        ps.setString(4, LocalDateTime.now().toString().replaceAll("T", " "));
+		        if(t.getDeleted_at() != null) {
+		        	ps.setString(5, t.getDeleted_at().toString());
+		        }
+		        else {
+		        	ps.setString(5,  null);
+		        }
+		        ps.execute();
+		        return uuid;
+			}
 		} catch(Exception e) {
 			throw new Exception("Could not add TimeNotAvailable: " + e.getMessage());
 		}
@@ -53,10 +68,9 @@ public class TimesNotAvailableDAO {
 		TimeNotAvailable tna;
 		try {
 			Statement statement = conn.createStatement();
-			String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE uuid=\"" + uuid + "\";";
+			String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE uuid=\"" + uuid + "\" AND deleted_at IS null;";
 			ResultSet resultSet = statement.executeQuery(query);
-			if(resultSet != null) {
-				resultSet.first();
+			if(resultSet.first()) {
 				tna = generateTimeNotAvailable(resultSet);
 			}
 			else {
@@ -77,17 +91,17 @@ public class TimesNotAvailableDAO {
 			String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE deleted_at IS null;";
 			ResultSet resultSet = statement.executeQuery(query);
 			
-			if(resultSet != null) {
-				while(resultSet.next()) {
-					tnas.add(generateTimeNotAvailable(resultSet));
-				}
-			}
-			else {
-				tnas = null;
+			while(resultSet.next()) {
+				tnas.add(generateTimeNotAvailable(resultSet));
 			}
 			resultSet.close();
             statement.close();
-            return tnas;
+            if(tnas.isEmpty()) {
+            	return null;
+            }
+            else {
+            	return tnas;
+            }
 		} catch(Exception e) {
 			throw new Exception("Failed to get TimesNotAvailable: " + e.getMessage());
 		}
@@ -95,25 +109,29 @@ public class TimesNotAvailableDAO {
 
 	public ArrayList<TimeNotAvailable> getAllTimesNotAvailableForScheduleId(String scheduleId) throws Exception {
 		ArrayList<TimeNotAvailable> tna = new ArrayList<>();
-
-		Statement statement = conn.createStatement();
-		String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + scheduleId + "\" and deleted_at is null;";
-
-		ResultSet rs = statement.executeQuery(query);
-
-		if (rs != null) {
+		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM Scheduler.TimesNotAvailable WHERE schedule_id=\"" + scheduleId + "\" and deleted_at is null;";
+	
+			ResultSet rs = statement.executeQuery(query);
+	
 			while (rs.next()) {
 				tna.add(generateTimeNotAvailable(rs));
 			}
-
 			rs.close();
+			statement.close();
+			if(tna.isEmpty()) {
+				return null;
+			}
+			else {
+				return tna;
+			}
+		} catch(Exception e) {
+			throw new Exception("Failed to get all TimeNotAvailable: " + e.getMessage());
 		}
-
-		statement.close();
-		return tna;
 	}
 	
-	public boolean deleteTimeNotAvailable(String schedule_id, LocalDateTime startTime) {
+	public boolean deleteTimeNotAvailable(String schedule_id, LocalDateTime startTime) throws Exception {
 		try {
 			PreparedStatement ps;
 			String currentTime = LocalDateTime.now().toString().replaceAll("T", " ");
@@ -128,7 +146,7 @@ public class TimesNotAvailableDAO {
             }
 		}
 		catch(Exception e) {
-			return false;
+			throw new Exception("Failed to delete TimeNotAvailable: " + e.getMessage());
 		}
 	}
 	
