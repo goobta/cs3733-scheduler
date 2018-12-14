@@ -28,8 +28,15 @@ public class MeetingDAO {
 	}
 	
 	public String addMeeting(Meeting m) throws Exception {
-		String uuid = UUID.randomUUID().toString();
 		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM Scheduler.Meetings WHERE deleted_at IS null AND schedule_id=\"" + m.getSchedule_id() + "\" AND start_time=\"" + m.getStart_time() + "\";";
+			ResultSet existingSet = statement.executeQuery(query);
+			if(existingSet.first()) {
+				return null;
+			}
+			
+			String uuid = UUID.randomUUID().toString();
 			PreparedStatement ps;
             ps = conn.prepareStatement("INSERT INTO Meetings (schedule_id, uuid, start_time, created_at, "
             		+ "deleted_at, participant_name) "
