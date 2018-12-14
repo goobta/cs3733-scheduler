@@ -33,8 +33,10 @@ public class ParticipantSearchScheduleRequest {
         ArrayList<Meeting> meetings = mDAO.getAllMeetingsForSchedule(scheduleId);
         ArrayList<LocalDateTime> meetingTimesRaw = new ArrayList<>();
 
-        for(Meeting meeting : meetings) {
-            meetingTimesRaw.add(meeting.getStart_time());
+        if(meetings != null) {
+            for (Meeting meeting : meetings) {
+                meetingTimesRaw.add(meeting.getStart_time());
+            }
         }
 
         HashSet<LocalDateTime> meetingTimes = new HashSet<>(meetingTimesRaw);
@@ -44,8 +46,10 @@ public class ParticipantSearchScheduleRequest {
         ArrayList<TimeNotAvailable> tna = tDAO.getAllTimesNotAvailableForScheduleId(scheduleId);
         ArrayList<LocalDateTime> timesNotAvailableRaw = new ArrayList<>();
 
-        for(TimeNotAvailable t : tna) {
-            timesNotAvailableRaw.add(t.getStart_time());
+        if(tna != null) {
+            for(TimeNotAvailable t : tna) {
+                timesNotAvailableRaw.add(t.getStart_time());
+            }
         }
 
         HashSet<LocalDateTime> timesNotAvailable = new HashSet<>(timesNotAvailableRaw);
