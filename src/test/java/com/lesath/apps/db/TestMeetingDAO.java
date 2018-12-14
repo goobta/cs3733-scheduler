@@ -29,6 +29,7 @@ public class TestMeetingDAO {
 		
 		String uuid = mdao.addMeeting(meeting);
 		meeting.setUuid(uuid);
+		assertNull(mdao.addMeeting(meeting));
 		Meeting gotMeeting = mdao.getMeeting(uuid);
 		assertTrue(gotMeeting.equals(meeting));
 		
