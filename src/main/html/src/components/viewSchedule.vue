@@ -3,6 +3,7 @@
 		<h1>{{ schedule.name }}</h1>
 		<button :disabled='page == 0' class='button' @click='page--'>Previous Page</button>
 		<button :disabled='atEnd' class='button' @click='page++'>Next Page</button>
+		<button class='button' @click='search()'>Search</button>
 		<table class='table is-bordered'>
 			<tbody>
 				<tr>
@@ -206,8 +207,10 @@ export default {
 		      })
 		        .catch(error => console.error('Error:', error));
 		    location.reload();
+		},
+		async search () {
+			window.location.href = 'https://schedulerbucket2.s3.us-east-2.amazonaws.com/index.html#/scheduleSearch?uuid=' + this.uuid;
 		}
-
 	},
 	async created () {
 		this.uuid = this.$route.query.uuid;

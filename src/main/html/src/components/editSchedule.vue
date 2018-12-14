@@ -227,7 +227,7 @@ export default {
 		        }
 		      })
 		        .catch(error => console.error('Error:', error));
-		    //location.reload();
+		    location.reload();
 		},
 		async cancelDay (dayOfWeek) {
 			let temp = [];

@@ -272,9 +272,7 @@ export default {
 				participantName: name
 			}
 			this.newMeeting.startDateTime = new Date(day);
-			console.log(time.length == 4 ? time.substring(0,1) : time.substring(0,2), time.slice(-2))
 			this.newMeeting.startDateTime.setUTCHours(time.length == 4 ? time.substring(0,1) : time.substring(0,2), time.slice(-2))
-			console.log(this.newMeeting);
 			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting?scheduleId=' + this.uuid,{
 				method: 'PUT',
 				body: JSON.stringify(this.newMeeting),
@@ -301,7 +299,7 @@ export default {
 					if(this.filters[i].name == 'Start Time' || this.filters[i].name == 'End Time'){
 						let date = new Date();
 						let time = this.filters[i].value;
-						date.setHours(Math.floor(time/60), time%60)
+						date.setUTCHours(Math.floor(time/60), time%60)
 						body[i] = date;
 					}else{
 						body[i] = this.filters[i].value;
