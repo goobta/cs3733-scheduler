@@ -9,7 +9,7 @@
       </div>
       <div class='field-body'>
         <div class='field'>
-          <p class='controll'>
+          <p class='control'>
             <input v-model="schedule.name" class="input" type="text">
           </p>
         </div>
@@ -22,7 +22,7 @@
       </div>
       <div class='field-body'>
         <div class='field'>
-          <p class='controll'>
+          <p class='control'>
             <datepicker class='field' v-model="schedule.startDateTime"></datepicker>
           </p>
         </div>
@@ -35,7 +35,7 @@
       </div>
       <div class='field-body'>
         <div class='field'>
-          <p class='controll'>
+          <p class='control'>
             <datepicker class='field' v-model="schedule.endDateTime"></datepicker>
           </p>
         </div>
@@ -48,7 +48,7 @@
       </div>
       <div class='field-body'>
         <div class='field'>
-          <p class='controll'>
+          <p class='control'>
             <vue-timepicker v-model='schedule.startTime' :minute-interval='15'></vue-timepicker>
           </p>
         </div>
@@ -61,7 +61,7 @@
       </div>
       <div class='field-body'>
         <div class='field'>
-          <p class='controll'>
+          <p class='control'>
             <vue-timepicker v-model='schedule.endTime' :minute-interval='15'></vue-timepicker>
           </p>
         </div>
@@ -73,8 +73,9 @@
         <label class="label">Meeting Length</label>
       </div>
       <div class='field-body'>
-        <div class='field select'>
-          <p class='controll'>
+        <div class='field'>
+          <p class='control'>
+            <div class='select'>
                 <select v-model="schedule.meetingLength">
                   <option :value='10'>10</option>
                   <option :value='15'>15</option>
@@ -82,6 +83,7 @@
                   <option :value='30'>30</option>
                   <option :value='60'>60</option>
                 </select>
+              </div>
           </p>
         </div>
       </div>

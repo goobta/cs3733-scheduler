@@ -3,13 +3,14 @@
 		<h1>{{ schedule.name }}</h1>
 		<button :disabled='page == 0' class='button' @click='page--'>Previous Page</button>
 		<button :disabled='atEnd' class='button' @click='page++'>Next Page</button>
+		<button class='button is-danger' @click='deleteSchedule()'>Delete</button>
 		<table class='table is-bordered'>
 			<tbody>
 				<tr>
 					<th>
 						{{ dateRange }}</br>
-						<button>Add day left</button>
-						<button>Add day right</button>
+						<button @click='extend(-1)'>Extend day left</button>
+						<button @click='extend(1)'>Extend day right</button>
 					</th>
 					<th>
 						Monday</br>
@@ -314,6 +315,32 @@ export default {
 			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/multitoggletimeslot',{
 				method: 'DELETE',
 				body: JSON.stringify(body),
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .catch(error => console.error('Error:', error));
+	        location.reload();
+		},
+		async extend (deltaDays) {
+			let body = {
+				deltaDays
+			}
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/extendSchedule?scheduleId=' + this.uuid,{
+				method: 'POST',
+				body: JSON.stringify(body),
+				headers:{
+		          'Content-Type': 'application/json'
+		        }
+			})
+			.then(res => res.json())
+	        .catch(error => console.error('Error:', error));
+	        location.reload();
+		},
+		async deleteSchedule () {
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/organizerSchedule?scheduleId=' + this.uuid,{
+				method: 'DELETE',
 				headers:{
 		          'Content-Type': 'application/json'
 		        }
