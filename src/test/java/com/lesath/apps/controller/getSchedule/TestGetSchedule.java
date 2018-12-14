@@ -60,9 +60,9 @@ public class TestGetSchedule {
 
 		TimesNotAvailableDAO tnaDAO = new TimesNotAvailableDAO();
 
-		LocalDateTime startT1 = LocalDateTime.of(2018,12,04,8,0,0);
-		LocalDateTime startT2 = LocalDateTime.of(2018,12,05,8,0,0);
-		LocalDateTime startT3 = LocalDateTime.of(2018,12,06,8,0,0);
+		LocalDateTime startT1 = LocalDateTime.of(2018,12,04,9,0,0);
+		LocalDateTime startT2 = LocalDateTime.of(2018,12,05,9,0,0);
+		LocalDateTime startT3 = LocalDateTime.of(2018,12,06,9,0,0);
 
 		LocalDateTime createdT = LocalDateTime.of(2018,12,04,10,0,0);
 
