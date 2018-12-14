@@ -1,7 +1,7 @@
 <template>
 	<div class='app'>
 		<p>Search open slots for {{ schedule.name }}</p>
-		<div v-if='filters.dayOfWeek.visible' class='field is-horizontal'>
+		<div v-if='filters.dayOfTheWeek.visible' class='field is-horizontal'>
 			<div class='field-label is-normal'>
 				<label class="label">Day Of Week:</label>
 			</div>
@@ -9,12 +9,12 @@
 				<div class='field'>
 				  <p class='control'>
 			  		<div class='select'>
-				        <select v-model="filters.dayOfWeek.value">
-							<option :value='0'>Monday</option>
-							<option :value='1'>Tuesday</option>
-							<option :value='2'>Wednesday</option>
-							<option :value='3'>Thursday</option>
-							<option :value='4'>Friday</option>
+				        <select v-model="filters.dayOfTheWeek.value">
+							<option :value='1'>Monday</option>
+							<option :value='2'>Tuesday</option>
+							<option :value='3'>Wednesday</option>
+							<option :value='4'>Thursday</option>
+							<option :value='5'>Friday</option>
 				        </select>
 				    </div>
 				    <a class="icon has-text-danger">
@@ -116,7 +116,7 @@
 			</div>
 		</div>
 
-		<div v-if='filters.date.visible' class='field is-horizontal'>
+		<div v-if='filters.day.visible' class='field is-horizontal'>
 			<div class='field-label is-normal'>
 				<label class="label">Date:</label>
 			</div>
@@ -124,7 +124,7 @@
 				<div class='field'>
 				  <p class='control'>
 				  	<div class='select'>
-				        <select v-model="filters.date.value">
+				        <select v-model="filters.day.value">
 							<option v-for='date in dates' :value='date'>{{ date }}</option>
 				        </select>
 				    </div>
@@ -178,10 +178,10 @@
 						{{ timeslot.date }}
 					</td>
 					<td>
-						{{ timeslot.time}}
+						{{ timeslot.time }}
 					</td>
 					<td>
-						<button @click='createMeeting(timeSlot.day, timeSlot.time)'></button>
+						<button @click='createMeeting(timeslot.date, timeslot.time)' class='button'>Book</button>
 					</td>
 				</tr>
 			</tbody>
@@ -194,7 +194,7 @@ export default {
 	data: function () {
 		return {
 			filters: {
-				dayOfWeek: {
+				dayOfTheWeek: {
 					visible: false,
 					name: 'Day of Week'
 				},
@@ -214,7 +214,7 @@ export default {
 					visible: false,
 					name: 'Month'
 				},
-				date: {
+				day: {
 					visible: false,
 					name: 'Date'
 				}
@@ -224,10 +224,24 @@ export default {
 			schedule: {},
 			search: {},
 			times: [],
-			timeslots: [],
+			openTimeSlots: [],
 			years: [],
 			dates: [],
 			newMeeting: {}
+		}
+	},
+	computed: {
+		timeslots: function () {
+			let temp = [];
+			for(let i = 0; i < this.openTimeSlots.length; i++){
+				let d = new Date(this.openTimeSlots[i]);
+				temp.push({
+					date: (d.getMonth() + 1) + "/" + d.getDate() + '/' + (d.getYear() + 1900),
+					time: d.getHours() + ':' + d.getMinutes().toString().padStart(2, '0')
+				})
+			}
+
+			return temp;
 		}
 	},
 	methods: {
@@ -255,10 +269,12 @@ export default {
 			this.newMeeting.scheduleId = this.uuid;
 			let name = prompt("Enter Name:")
 			this.newMeeting = {
-				participantName: name,
+				participantName: name
 			}
 			this.newMeeting.startDateTime = new Date(day);
-			this.newMeeting.startDateTime.setUTCHours(Math.floor(time/60), time%60)
+			console.log(time.length == 4 ? time.substring(0,1) : time.substring(0,2), time.slice(-2))
+			this.newMeeting.startDateTime.setUTCHours(time.length == 4 ? time.substring(0,1) : time.substring(0,2), time.slice(-2))
+			console.log(this.newMeeting);
 			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/createMeeting?scheduleId=' + this.uuid,{
 				method: 'PUT',
 				body: JSON.stringify(this.newMeeting),
@@ -269,7 +285,7 @@ export default {
 			.then(res => res.json())
 	        .then(response => alert("Secret code: " + response.meetingUuid))
 	        .catch(error => console.error('Error:', error));
-	        location.reload();
+	        //location.reload();
 		},
 		toggleFilter (filter) {
 			for(let i in this.filters){
@@ -285,24 +301,22 @@ export default {
 					if(this.filters[i].name == 'Start Time' || this.filters[i].name == 'End Time'){
 						let date = new Date();
 						let time = this.filters[i].value;
-						date.setUTCHours(Math.floor(time/60), time%60)
-						console.log(date);
+						date.setHours(Math.floor(time/60), time%60)
 						body[i] = date;
 					}else{
 						body[i] = this.filters[i].value;
 					}
 				}
 			}
-			console.log(body);
-			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/searchSchedule?scheduleId=' + this.uuid,{
-				method: 'GET',
+			await fetch('https://wasu526ybc.execute-api.us-east-2.amazonaws.com/Zeta/participantsearch?scheduleId=' + this.uuid,{
+				method: 'POST',
 				body: JSON.stringify(body),
 				headers:{
 		          'Content-Type': 'application/json'
 		        }
 			})
 			.then(res => res.json())
-	        .then(response => this.timeslots = response)
+	        .then(response => this.openTimeSlots = response)
 	        .catch(error => console.error('Error:', error));
 		}
 	},

@@ -101,18 +101,22 @@ export default {
 		},
 		meetings: function () {
 			let temp = {};
-			for(let i = 0; i < this.schedule.meetings.length; i++){
-				temp[this.schedule.meetings[i].startTime] = {
-					name: this.schedule.meetings[i].participantName,
-					id: this.schedule.meetings[i].id
+			if(this.schedule.meetings){
+				for(let i = 0; i < this.schedule.meetings.length; i++){
+					temp[this.schedule.meetings[i].startTime] = {
+						name: this.schedule.meetings[i].participantName,
+						id: this.schedule.meetings[i].id
+					}
 				}
 			}
 			return temp;
 		},
 		notAviable: function () {
 			let temp = {};
-			for(let i = 0; i < this.schedule.timesNotAvailable.length; i++){
-				temp[this.schedule.timesNotAvailable[i]] = true;
+			if(this.schedule.timesNotAvailable){
+				for(let i = 0; i < this.schedule.timesNotAvailable.length; i++){
+					temp[this.schedule.timesNotAvailable[i]] = true;
+				}
 			}
 			return temp;
 		}

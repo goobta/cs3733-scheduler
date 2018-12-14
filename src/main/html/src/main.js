@@ -1,7 +1,7 @@
 import Vue from 'vue/dist/vue.js'
 import VueRouter from 'vue-router'
 
-import cognitoAuth from './cognito'
+// import cognitoAuth from './cognito'
 
 import createSchedule from './components/createSchedule'
 import viewSchedule from './components/viewSchedule'
@@ -48,6 +48,6 @@ let router = new VueRouter({
 
 new Vue({
   el: '#app',
-  router,
-  cognitoAuth
+  router
+  //cognitoAuth
 })
